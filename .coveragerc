@@ -1,8 +1,12 @@
 # .coveragerc to control coverage.py
 [run]
 branch = True
-source = cuentasclaras
+source = src
 # omit = bad_file.py
+omit =
+    src\logica\__init__.py
+    src\modelo\*
+    src\vista\*
 
 [paths]
 source =
