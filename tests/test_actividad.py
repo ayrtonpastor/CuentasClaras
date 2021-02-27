@@ -2,8 +2,6 @@ import unittest
 
 from src.logica.control_cuenta import ControlCuenta
 from src.modelo.actividad import Actividad
-from src.modelo.viajero import Viajero
-from src.modelo.gasto import Gasto
 from src.modelo.declarative_base import Session
 
 class ActividadTestCase(unittest.TestCase):

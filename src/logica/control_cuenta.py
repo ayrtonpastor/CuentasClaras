@@ -1,5 +1,7 @@
 from src.modelo.declarative_base import engine, Base, session
 from src.modelo.actividad import Actividad
+from src.modelo.viajero import Viajero
+from src.modelo.gasto import Gasto
 
 
 class ControlCuenta():
