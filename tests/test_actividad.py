@@ -26,7 +26,7 @@ class ActividadTestCase(unittest.TestCase):
         self.session.close()
 
     def tearDown(self):
-        '''Abre la sesión'''
+        '''Abre la sesion'''
         self.session = Session()
 
         '''Consulta todas las actividades'''
