@@ -16,4 +16,5 @@ class ControlCuenta():
         pass
 
     def listarGastos(self, actividad_id):
-        pass
+        actividad = session.query(Actividad).filter_by(id=actividad_id).first()
+        return actividad.gastos
