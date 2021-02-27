@@ -7,7 +7,7 @@ class Gasto(Base):
 
     id = Column(Integer, primary_key=True)
     concepto = Column(String)
-    monto = Column(Numeric)
+    monto = Column(Numeric(precision=2))
     fecha = Column(Date)
 
     actividad_id = Column(Integer, ForeignKey('actividad.id'), nullable=False)
