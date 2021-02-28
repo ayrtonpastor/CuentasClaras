@@ -10,7 +10,7 @@ class Actividad(Base):
     nombre = Column(String, unique=True)
     terminada = Column(Boolean)
 
-    gastos = relationship('Gasto', backref='gasto',
+    gastos = relationship('Gasto', back_populates='actividad',
                           cascade='all, delete, delete-orphan')
     viajeros = relationship('Viajero', secondary='actividad_viajero')
 
