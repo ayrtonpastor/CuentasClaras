@@ -104,25 +104,16 @@ class ActividadTestCase(unittest.TestCase):
         self.assertListEqual([], reporte_compensacion)
 
     def test_reporte_compensacion_sin_gastos(self):
+        ''' Como todos le deben lo mismo, los valores de las columnas son identicas '''
         reporte_compensacion = self.control_cuenta.crearReporteCompensacion(
             self.actividad3_id)
         self.assertListEqual([
             {
                 "nombre": "Raul Calero",
-                "compensacion": [ 
-                    {
-                        "nombre" : "Dario Correal",
-                        "monto"  : "0.00" 
-                    }
-                ],
+                "monto_debe_cada_uno": "0.00",
             },
             {
                 "nombre": "Dario Correal",
-                "compensacion": [
-                    {
-                        "nombre" : "Raul Calero",
-                        "monto" : "0.00"
-                    }
-                ]
+                "monto_debe_cada_uno": "0.00" 
             }
         ], reporte_compensacion)
