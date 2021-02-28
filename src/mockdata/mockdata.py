@@ -7,6 +7,8 @@ from src.modelo.gasto import Gasto
 
 class MockDataFactory():
     def __init__(self) -> None:
+        ''' Delete anything if exists '''
+        self.tearDown()
         pass
 
     def setUp(self):
