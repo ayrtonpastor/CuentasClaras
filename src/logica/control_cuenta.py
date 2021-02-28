@@ -40,7 +40,6 @@ class ControlCuenta():
                     "monto_debe_cada_uno": "{:.2f}".format(promedio)
                 }
                 objetos.append(objeto)
-        print(objetos)
         return objetos
 
     def listarGastos(self, actividad_id):
