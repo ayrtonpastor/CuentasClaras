@@ -25,7 +25,7 @@ class App_CuentasClaras(QApplication):
         Esta función inicializa la ventana de la lista de actividades
         """
         self.vista_lista_actividades = Vista_lista_actividades(self) 
-        self.vista_lista_actividades.mostrar_actividades(self.logica.actividades)
+        self.vista_lista_actividades.mostrar_actividades(self.logica.listarActividades())
 
 
     def insertar_actividad(self, nombre):

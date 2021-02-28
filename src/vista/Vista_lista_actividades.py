@@ -90,7 +90,7 @@ class Vista_lista_actividades(QWidget):
         """
         Esta función puebla la tabla con las activiades
         """
-        self.actividades = lista_actividades
+        self.actividades = [actividad.nombre for actividad in lista_actividades]
 
         #Este pedazo de código borra todo lo que no sean encabezados, es decir, a partir del tercer elemento.
         while self.distribuidor_tabla_actividades.count()>2:
