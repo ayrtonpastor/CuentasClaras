@@ -107,13 +107,13 @@ class ActividadTestCase(unittest.TestCase):
         ''' Como todos le deben lo mismo, los valores de las columnas son identicas '''
         reporte_compensacion = self.control_cuenta.crearReporteCompensacion(
             self.actividad3_id)
-        self.assertListEqual([
+        self.assertEqual([
+            {
+                "nombre": "Dario Correal",
+                "monto_debe_cada_uno": "0.00"
+            },
             {
                 "nombre": "Raul Calero",
                 "monto_debe_cada_uno": "0.00",
-            },
-            {
-                "nombre": "Dario Correal",
-                "monto_debe_cada_uno": "0.00" 
             }
         ], reporte_compensacion)
