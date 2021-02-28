@@ -50,9 +50,11 @@ class ActividadTestCase(unittest.TestCase):
         # Viajero asociado a actividad 3
         self.actividad_viajero5 = ActividadViajero(
             actividad_id=self.actividad3.id, viajero_id=self.viajero4.id)
+        self.actividad_viajero6 = ActividadViajero(
+            actividad_id=self.actividad3.id, viajero_id=self.viajero1.id)
 
         self.session.add_all([self.actividad_viajero1, self.actividad_viajero2, self.actividad_viajero3,
-                              self.actividad_viajero4])
+                              self.actividad_viajero4, self.actividad_viajero5, self.actividad_viajero6])
 
         # Gastos asociados a la actividad 1
         self.gasto1 = Gasto(concepto="paletas heladas", monto=1234, fecha=date(2021, 1, 1),
@@ -63,6 +65,8 @@ class ActividadTestCase(unittest.TestCase):
         # Gastos asociados a la actividad 2
         self.gasto3 = Gasto(concepto="viaje de despedida", monto=999.24, fecha=date(
             2020, 1, 1), viajero_id=self.viajero3.id, actividad_id=self.actividad2.id)
+
+        self.session.add_all([self.gasto1, self.gasto2, self.gasto3])
 
         self.session.commit()
         self.actividad1_id = self.actividad1.id
@@ -95,5 +99,30 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(len(actividades), 4)
 
     def test_reporte_compensacion_sin_viajeros(self):
-        reporte_compensacion = self.control_cuenta.crearReporteCompensacion(self.actividad4_id)
-        self.assertListEqual([],reporte_compensacion)
+        reporte_compensacion = self.control_cuenta.crearReporteCompensacion(
+            self.actividad4_id)
+        self.assertListEqual([], reporte_compensacion)
+
+    def test_reporte_compensacion_sin_gastos(self):
+        reporte_compensacion = self.control_cuenta.crearReporteCompensacion(
+            self.actividad3_id)
+        self.assertListEqual([
+            {
+                "nombre": "Raul Calero",
+                "compensacion": [ 
+                    {
+                        "nombre" : "Dario Correal",
+                        "monto"  : "0.00" 
+                    }
+                ],
+            },
+            {
+                "nombre": "Dario Correal",
+                "compensacion": [
+                    {
+                        "nombre" : "Raul Calero",
+                        "monto" : "0.00"
+                    }
+                ]
+            }
+        ], reporte_compensacion)
