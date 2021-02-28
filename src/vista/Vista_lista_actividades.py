@@ -90,7 +90,7 @@ class Vista_lista_actividades(QWidget):
         """
         Esta función puebla la tabla con las activiades
         """
-        self.actividades = [actividad.nombre for actividad in lista_actividades]
+        self.actividades = lista_actividades
 
         #Este pedazo de código borra todo lo que no sean encabezados, es decir, a partir del tercer elemento.
         while self.distribuidor_tabla_actividades.count()>2:
@@ -126,10 +126,10 @@ class Vista_lista_actividades(QWidget):
             self.distribuidor_tabla_actividades.addWidget(etiqueta_acciones, 0,1,1,5, Qt.AlignCenter)
        
             numero_fila=0
-            for item in self.actividades:
+            for my_actividad in self.actividades:
                 numero_fila=numero_fila+1
 
-                etiqueta_actividad=QLabel(item)          
+                etiqueta_actividad=QLabel(my_actividad.nombre)          
                 etiqueta_actividad.setWordWrap(True)
                 self.distribuidor_tabla_actividades.addWidget(etiqueta_actividad,numero_fila,0)
 
@@ -146,14 +146,14 @@ class Vista_lista_actividades(QWidget):
                 btn_ver_actividad.setToolTip("Ver")
                 btn_ver_actividad.setFixedSize(40,40)
                 btn_ver_actividad.setIcon(QIcon("src/recursos/002-eye-variant-with-enlarged-pupil.png"))
-                btn_ver_actividad.clicked.connect(partial(self.mostrar_actividad,numero_fila-1) )
+                btn_ver_actividad.clicked.connect(partial(self.mostrar_actividad,my_actividad) )
                 self.distribuidor_tabla_actividades.addWidget(btn_ver_actividad,numero_fila,2,Qt.AlignCenter)
 
                 btn_ver_viajeros=QPushButton("",self)
                 btn_ver_viajeros.setToolTip("Viajeros")
                 btn_ver_viajeros.setFixedSize(40,40)
                 btn_ver_viajeros.setIcon(QIcon("src/recursos/003-multiple-users-silhouette.png"))
-                btn_ver_viajeros.clicked.connect(partial(self.mostrar_dialogo_insertar_viajeros,item) )
+                btn_ver_viajeros.clicked.connect(partial(self.mostrar_dialogo_insertar_viajeros,my_actividad) )
                 self.distribuidor_tabla_actividades.addWidget(btn_ver_viajeros,numero_fila,3,Qt.AlignCenter)
 
                 btn_editar=QPushButton("",self)

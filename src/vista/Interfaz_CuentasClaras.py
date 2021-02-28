@@ -78,14 +78,14 @@ class App_CuentasClaras(QApplication):
         self.logica.viajeros.pop(indice_viajero)
         self.vista_lista_viajeros.mostrar_viajeros(self.logica.viajeros)
     
-    def mostrar_actividad(self, indice_actividad=-1):
+    def mostrar_actividad(self, actividad = None):
         """
         Esta función muestra la ventana detallada de una actividad
         """
-        if indice_actividad != -1:
-            self.actividad_actual = indice_actividad
+        if actividad == None:
+            raise Exception("Actividad nula")
         self.vista_actividad = Vista_actividad(self)
-        self.vista_actividad.mostrar_gastos_por_actividad(self.logica.actividades[self.actividad_actual], self.logica.gastos)
+        self.vista_actividad.mostrar_gastos_por_actividad(actividad, self.logica.listarGastos(actividad.id))
 
     def insertar_gasto(self, concepto, fecha, valor, viajero_nombre, viajero_apellido):
         """

@@ -104,9 +104,11 @@ class Vista_actividad(QWidget):
 
     def mostrar_gastos_por_actividad(self, actividad, gastos):
         """
+        actividad: Objeto de tipo actividad
+        gastos: lista de objetos de tipo gastos
         Esta función puebla la tabla de gastos para la actividad
         """   
-        self.titulo+=" "+actividad
+        self.titulo+=" "+actividad.nombre
         self.setWindowTitle(self.titulo)
 
         self.gastos = gastos
@@ -131,21 +133,23 @@ class Vista_actividad(QWidget):
         numero_fila=1
         
         #Ciclo para llenar los gastos
-        for gasto in self.gastos:
+        for m_gasto in self.gastos:
 
-            etiqueta_nombre = QLabel(gasto["Nombre"] + " " + gasto["Apellido"] )
+
+
+            etiqueta_nombre = QLabel(m_gasto.viajero.nombre + " " + m_gasto.viajero.apellido )
             etiqueta_nombre.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_nombre, numero_fila, 0)
 
-            etiqueta_fecha = QLabel(gasto["Fecha"])
+            etiqueta_fecha = QLabel(str(m_gasto.fecha))
             etiqueta_fecha.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_fecha, numero_fila, 1)
 
-            etiqueta_concepto = QLabel(gasto["Concepto"])
+            etiqueta_concepto = QLabel(m_gasto.concepto)
             etiqueta_concepto.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_concepto, numero_fila, 2)
 
-            etiqueta_valor = QLabel("${:,.2f}".format(gasto["Valor"]))
+            etiqueta_valor = QLabel("${:,.2f}".format(m_gasto.monto))
             etiqueta_valor.setWordWrap(True)
             self.distribuidor_actividades.addWidget(etiqueta_valor, numero_fila, 3, Qt.AlignLeft)
 
