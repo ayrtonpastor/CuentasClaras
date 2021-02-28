@@ -59,7 +59,7 @@ class ActividadTestCase(unittest.TestCase):
         # Gastos asociados a la actividad 1
         self.gasto1 = Gasto(concepto="paletas heladas", monto=1234, fecha=date(2021, 1, 1),
                             viajero_id=self.viajero1.id, actividad_id=self.actividad1.id)
-        self.gasto2 = Gasto(concepto="alcohol", monto=4444, fecha=date(2021, 1, 4),
+        self.gasto2 = Gasto(concepto="motocross", monto=4444, fecha=date(2021, 1, 4),
                             viajero_id=self.viajero2.id, actividad_id=self.actividad1.id)
 
         # Gastos asociados a la actividad 2
@@ -99,48 +99,33 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(len(actividades), 4)
 
     def test_reporte_compensacion_sin_viajeros(self):
+        """ Solo aparecerá la primera celda de la tabla """
         reporte_compensacion = self.control_cuenta.crearReporteCompensacion(
             self.actividad4_id)
-        self.assertListEqual([], reporte_compensacion)
+        self.assertListEqual([[" "]], reporte_compensacion)
 
     def test_reporte_compensacion_sin_gastos(self):
-        ''' Como todos le deben lo mismo, los valores de las columnas son identicas '''
+        """ Solo aparecerá la cabecera de la tabla """
         reporte_compensacion = self.control_cuenta.crearReporteCompensacion(
             self.actividad3_id)
+
         self.assertEqual([
-            {
-                "nombre": "Dario Correal",
-                "monto_debe_cada_uno": "0.00"
-            },
-            {
-                "nombre": "Raul Calero",
-                "monto_debe_cada_uno": "0.00",
-            }
-        ], reporte_compensacion)
+            [" ", "Dario Correal", "Raul Calero"]
+            ], reporte_compensacion)
     
     def test_reporte_compensacion_actividad(self):
         reporte_compensacion_actividad_1 = self.control_cuenta.crearReporteCompensacion(
             self.actividad1_id)
         self.assertEqual([
-            {
-                "nombre": "Dario Correal",
-                "monto_debe_cada_uno": "617.00"
-            },
-            {
-                "nombre": "Ayrton Pastor",
-                "monto_debe_cada_uno": "2222.00",
-            }
+            [" ", "Dario Correal", "Ayrton Pastor"],
+            ["Dario Correal", -1, "1605.00"],
+            ["Ayrton Pastor", "0.00", -1]
         ], reporte_compensacion_actividad_1)
 
         reporte_compensacion_actividad_2 = self.control_cuenta.crearReporteCompensacion(
             self.actividad2_id)
         self.assertEqual([
-            {
-                "nombre": "Pedro Lizarazo",
-                "monto_debe_cada_uno": "499.62"
-            },
-            {
-                "nombre": "Raul Calero",
-                "monto_debe_cada_uno": "0.00",
-            }
+            [" ", "Pedro Lizarazo", "Raul Calero"],
+            ["Pedro Lizarazo", -1, "0.00"],
+            ["Raul Calero", "499.62", -1]
         ], reporte_compensacion_actividad_2)

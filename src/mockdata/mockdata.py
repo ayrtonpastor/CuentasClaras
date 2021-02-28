@@ -59,7 +59,7 @@ class MockDataFactory():
         # Gastos asociados a la actividad 1
         self.gasto1 = Gasto(concepto="paletas heladas", monto=1234, fecha=date(2021, 1, 1),
                             viajero_id=self.viajero1.id, actividad_id=self.actividad1.id)
-        self.gasto2 = Gasto(concepto="alcohol", monto=4444, fecha=date(2021, 1, 4),
+        self.gasto2 = Gasto(concepto="motocross", monto=4444, fecha=date(2021, 1, 4),
                             viajero_id=self.viajero2.id, actividad_id=self.actividad1.id)
 
         # Gastos asociados a la actividad 2
