@@ -21,6 +21,60 @@ class ControlCuenta():
 
     def crearReporteCompensacion(self, actividad_id):
         actividad_viajeros = session.query(ActividadViajero).filter_by(actividad_id=actividad_id)
+
+        matriz = []
+        cabecera = [" "]
+        for actividad_viajero in actividad_viajeros:
+            viajero = session.query(Viajero).filter_by(id=actividad_viajero.viajero_id).first()
+            cabecera.append(viajero.nombre + ' ' + viajero.apellido)
+        matriz.append(cabecera)
+
+        query_monto_gastos_por_actividad = session.query(func.sum(Gasto.monto)).filter_by(actividad_id=actividad_id).first()
+        monto_gastos_por_actividad = query_monto_gastos_por_actividad[0] if query_monto_gastos_por_actividad[0] else 0
+        if monto_gastos_por_actividad == 0:
+            return matriz
+
+        promedio_gastos_viajero = monto_gastos_por_actividad/actividad_viajeros.count()
+
+        cantidad_para_compensar = []
+        for i in range(actividad_viajeros.count()):
+            viajero_id = actividad_viajeros[i].viajero_id
+            gastos_por_viajero = session.query(func.sum(Gasto.monto)).filter_by(actividad_id=actividad_id, viajero_id=viajero_id).first()
+            monto_gasto_por_viajero = gastos_por_viajero[0] if gastos_por_viajero[0] else 0
+
+            compensacion = monto_gasto_por_viajero - promedio_gastos_viajero
+            cantidad_para_compensar.append(compensacion)
+
+        for i in range(actividad_viajeros.count()):
+            viajero_id = actividad_viajeros[i].viajero_id
+            viajero = session.query(Viajero).filter_by(id=viajero_id).first()
+            gastos_por_viajero = session.query(func.sum(Gasto.monto)).filter_by(actividad_id=actividad_id, viajero_id=viajero_id).first()
+            monto_gasto_por_viajero = gastos_por_viajero[0] if gastos_por_viajero[0] else 0
+            fila = [viajero.nombre + ' ' + viajero.apellido]
+            cantidad_por_compensar = promedio_gastos_viajero - monto_gasto_por_viajero
+
+            for j in range(len(cantidad_para_compensar)):
+                if i == j:
+                    fila.append(-1)
+                else:
+                    if cantidad_por_compensar <= 0 or cantidad_para_compensar[j] <= 0:
+                        fila.append('0.00')
+                    else:
+                        if cantidad_por_compensar <= cantidad_para_compensar[j]:
+                            fila.append("{:.2f}".format(cantidad_por_compensar))
+                            cantidad_para_compensar[j] -= cantidad_por_compensar
+                            cantidad_por_compensar = 0
+                        else:
+                            fila.append("{:.2f}".format(cantidad_para_compensar[j]))
+                            cantidad_por_compensar -= cantidad_para_compensar[j]
+                            cantidad_para_compensar[j] = 0
+
+            matriz.append(fila)
+
+        return matriz
+
+    def crearReporteCompensacionproto(self, actividad_id):
+        actividad_viajeros = session.query(ActividadViajero).filter_by(actividad_id=actividad_id)
         if actividad_viajeros.count() == 0:
             return []
         else:
