@@ -47,15 +47,23 @@ class Vista_reporte_compensacion(QWidget):
         self.btn_volver.setFixedSize(200, 40)
         self.btn_volver.setToolTip("Añadir Actividad")
         self.btn_volver.setIcon(QIcon("src/recursos/007-back-button.png"))
-        self.btn_volver.clicked.connect(self.volver)
 
         self.distribuidor_base.addWidget(self.btn_volver)
         self.distribuidor_base.setAlignment(self.btn_volver, Qt.AlignCenter)
 
-    def mostrar_reporte_compensacion(self, matriz_compensacion):
+    def actualizar_gui_con_actividad(self, actividad):
+        """
+        Esta funcion actualiza los botones para que se linkeen con la actividad correspondiente
+        """
+        self.btn_volver.clicked.connect(partial(self.volver,actividad))
+
+
+    def mostrar_reporte_compensacion(self, matriz_compensacion, actividad):
         """
         Esta función construye el reporte de compensación a partir de una matriz
-        """        
+        """
+        self.actualizar_gui_con_actividad(actividad)
+
 
         self.matriz = matriz_compensacion
 
@@ -77,10 +85,10 @@ class Vista_reporte_compensacion(QWidget):
                 else:
                     #Las etiquetas restantes deben ser los montos de dinero
                     etiqueta_valor = QLabel(
-                        "${:,.2f}".format(self.matriz[i][j]))
+                        self.matriz[i][j])
                     etiqueta_valor.setWordWrap(True)
                     etiqueta_valor.setToolTip(
-                        self.matriz[0][i] + " debe " + "${:,.2f}".format(self.matriz[i][j]) + " a " + self.matriz[0][j])
+                        self.matriz[0][i] + " debe " + self.matriz[i][j] + " a " + self.matriz[0][j])
                 etiqueta_valor.setFixedSize(100, 40)
                 self.distribuidor_tabla_compensacion.addWidget(
                     etiqueta_valor, i, j, Qt.AlignHCenter)
@@ -90,9 +98,9 @@ class Vista_reporte_compensacion(QWidget):
         self.distribuidor_tabla_compensacion.layout().setColumnStretch(len(self.matriz), 1)
 
 
-    def volver(self):
+    def volver(self, actividad):
         """
         Esta función permite volver a la ventana de la actividad
         """   
         self.hide()
-        self.interfaz.mostrar_actividad()
+        self.interfaz.mostrar_actividad(actividad)

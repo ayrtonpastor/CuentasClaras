@@ -108,12 +108,12 @@ class App_CuentasClaras(QApplication):
         self.logica.gastos.pop(indice)
         self.vista_actividad.mostrar_gastos_por_actividad(self.logica.actividades[self.actividad_actual], self.logica.gastos)
 
-    def mostrar_reporte_compensacion(self):
+    def mostrar_reporte_compensacion(self, actividad):
         """
         Esta función muestra la ventana del reporte de compensación
         """
         self.vista_reporte_comensacion = Vista_reporte_compensacion(self)
-        self.vista_reporte_comensacion.mostrar_reporte_compensacion(self.logica.matriz)
+        self.vista_reporte_comensacion.mostrar_reporte_compensacion(matriz_compensacion=self.logica.crearReporteCompensacion(actividad.id), actividad=actividad)
 
     def mostrar_reporte_gastos_viajero(self):
         """
