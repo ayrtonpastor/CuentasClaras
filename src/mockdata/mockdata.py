@@ -52,9 +52,13 @@ class MockDataFactory():
             actividad_id=self.actividad3.id, viajero_id=self.viajero4.id)
         self.actividad_viajero6 = ActividadViajero(
             actividad_id=self.actividad3.id, viajero_id=self.viajero1.id)
+        self.actividad_viajero7 = ActividadViajero(
+            actividad_id=self.actividad3.id, viajero_id=self.viajero3.id)
 
         self.session.add_all([self.actividad_viajero1, self.actividad_viajero2, self.actividad_viajero3,
-                              self.actividad_viajero4, self.actividad_viajero5, self.actividad_viajero6])
+                              self.actividad_viajero4, self.actividad_viajero5, self.actividad_viajero6,
+                              self.actividad_viajero7
+                              ])
 
         # Gastos asociados a la actividad 1
         self.gasto1 = Gasto(concepto="paletas heladas", monto=1234, fecha=date(2021, 1, 1),
@@ -66,7 +70,18 @@ class MockDataFactory():
         self.gasto3 = Gasto(concepto="viaje de despedida", monto=999.24, fecha=date(
             2020, 1, 1), viajero_id=self.viajero3.id, actividad_id=self.actividad2.id)
 
-        self.session.add_all([self.gasto1, self.gasto2, self.gasto3])
+        # Gastos asociado a la actividad 3
+        self.gasto4 = Gasto(concepto="salida parque", monto=4500, fecha=date(2020, 3, 4),
+                            viajero_id=self.viajero1.id, actividad_id=self.actividad3.id)
+        self.gasto5 = Gasto(concepto="salida cine", monto=3300, fecha=date(2020, 3, 4),
+                            viajero_id=self.viajero4.id, actividad_id=self.actividad3.id)
+        self.gasto6 = Gasto(concepto="salida fiesta", monto=5201, fecha=date(2020, 3, 4),
+                            viajero_id=self.viajero3.id, actividad_id=self.actividad3.id)
+        self.gasto7 = Gasto(concepto="salida fiesta2", monto=1000, fecha=date(2020, 3, 4),
+                            viajero_id=self.viajero3.id, actividad_id=self.actividad3.id)
+
+        self.session.add_all([self.gasto1, self.gasto2, self.gasto3, self.gasto4, self.gasto5,
+                              self.gasto6, self.gasto7])
 
         self.session.commit()
         self.actividad1_id = self.actividad1.id
