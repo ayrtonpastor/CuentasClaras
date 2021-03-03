@@ -104,7 +104,6 @@ class ControlCuenta():
             return False
         else:
             viajeros = session.query(Viajero).filter(Viajero.nombre == nombre, Viajero.apellido == apellido).all()
-
             if len(viajeros) == 0:
                 viajero = Viajero(nombre=nombre, apellido=apellido)
                 session.add(viajero)
