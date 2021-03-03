@@ -100,4 +100,5 @@ class ControlCuenta():
         return actividad.gastos
 
     def crearViajero(self, nombre, apellido):
-        pass
+        if nombre is None or nombre == "" or apellido is None or apellido == "":
+            return False
