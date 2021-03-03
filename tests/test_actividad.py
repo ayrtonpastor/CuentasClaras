@@ -133,6 +133,4 @@ class ActividadTestCase(unittest.TestCase):
     def test_reporte_gastos_por_viajero_en_actividad(self):
         reporte_gastos_por_viajero_actividad4 = self.control_cuenta.crearReporteGastosPorViajero(
             self.actividad4_id)
-        self.assertEqual([
-            []
-        ], reporte_gastos_por_viajero_actividad4)
+        self.assertEqual([], reporte_gastos_por_viajero_actividad4)
