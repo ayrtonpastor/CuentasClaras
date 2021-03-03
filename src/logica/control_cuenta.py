@@ -102,3 +102,13 @@ class ControlCuenta():
     def crearViajero(self, nombre, apellido):
         if nombre is None or nombre == "" or apellido is None or apellido == "":
             return False
+        else:
+            viajeros = session.query(Viajero).filter(Viajero.nombre == nombre, Viajero.apellido == apellido).all()
+
+            if len(viajeros) == 0:
+                viajero = Viajero(nombre=nombre, apellido=apellido)
+                session.add(viajero)
+                session.commit()
+                return True
+            else:
+                return False
