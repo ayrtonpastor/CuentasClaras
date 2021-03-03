@@ -103,6 +103,8 @@ class ControlCuenta():
         if nombre is None or nombre == "" or apellido is None or apellido == "":
             return False
         else:
+            nombre = nombre.strip()
+            apellido = apellido.strip()
             viajeros = session.query(Viajero).filter(Viajero.nombre == nombre, Viajero.apellido == apellido).all()
             if len(viajeros) == 0:
                 viajero = Viajero(nombre=nombre, apellido=apellido)

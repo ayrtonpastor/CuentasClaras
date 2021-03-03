@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QMessageBox
 from .Vista_lista_actividades import Vista_lista_actividades
 from .Vista_lista_viajeros import Vista_lista_viajeros
 from .Vista_actividad import Vista_actividad
@@ -15,16 +15,16 @@ class App_CuentasClaras(QApplication):
         Constructor de la interfaz. Debe recibir la lógica e iniciar la aplicación en la ventana principal.
         """
         super(App_CuentasClaras, self).__init__(sys_argv)
-        
+
         self.logica = logica
         self.mostrar_vista_lista_actividades()
-        
-        
+
+
     def mostrar_vista_lista_actividades(self):
         """
         Esta función inicializa la ventana de la lista de actividades
         """
-        self.vista_lista_actividades = Vista_lista_actividades(self) 
+        self.vista_lista_actividades = Vista_lista_actividades(self)
         self.vista_lista_actividades.mostrar_actividades(self.logica.listarActividades())
 
 
@@ -61,13 +61,26 @@ class App_CuentasClaras(QApplication):
         """
         Esta función inserta un viajero en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.viajeros.append({"Nombre":nombre, "Apellido":apellido})
+        crear_viajero = self.logica.crearViajero(nombre, apellido)
+        if crear_viajero:
+            self.logica.viajeros.append({"Nombre": nombre, "Apellido": apellido})
+        else:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al guardar los cambios")
+            if nombre is None or nombre == "" or apellido is None or apellido == "":
+                mensaje_error.setText("No puede dejar espacios en blanco.")
+            else:
+                mensaje_error.setText("Ya existe un viajero con estos datos.")
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+
         self.vista_lista_viajeros.mostrar_viajeros(self.logica.viajeros)
 
     def editar_viajero(self, indice_viajero, nombre, apellido):
         """
         Esta función edita un viajero en la lógica (debe modificarse cuando se construya la lógica)
-        """        
+        """
         self.logica.viajeros[indice_viajero] = {"Nombre":nombre, "Apellido":apellido}
         self.vista_lista_viajeros.mostrar_viajeros(self.logica.viajeros)
 
@@ -77,7 +90,7 @@ class App_CuentasClaras(QApplication):
         """
         self.logica.viajeros.pop(indice_viajero)
         self.vista_lista_viajeros.mostrar_viajeros(self.logica.viajeros)
-    
+
     def mostrar_actividad(self, actividad = None):
         """
         Esta función muestra la ventana detallada de una actividad
