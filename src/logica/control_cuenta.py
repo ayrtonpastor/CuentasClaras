@@ -77,6 +77,12 @@ class ControlCuenta():
     def crearReporteGastosPorViajero(self, actividad_id):
         actividad_viajeros = session.query(ActividadViajero).filter_by(actividad_id=actividad_id)
         matriz = []
+
+        for actividad_viajero in actividad_viajeros:
+            viajero = session.query(Viajero).filter_by(id=actividad_viajero.viajero_id).first()
+            consolidado_viajero = {"Nombre": viajero.nombre, "Apellido": viajero.apellido, "Valor": "0.00"}
+            matriz.append(consolidado_viajero)
+
         return matriz
 
     def crearReporteCompensacionproto(self, actividad_id):
