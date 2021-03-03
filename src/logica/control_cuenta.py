@@ -80,7 +80,9 @@ class ControlCuenta():
 
         for actividad_viajero in actividad_viajeros:
             viajero = session.query(Viajero).filter_by(id=actividad_viajero.viajero_id).first()
-            consolidado_viajero = {"Nombre": viajero.nombre, "Apellido": viajero.apellido, "Valor": "0.00"}
+            gastos_por_viajero = session.query(func.sum(Gasto.monto)).filter_by(actividad_id=actividad_id, viajero_id=viajero.id).first()
+            monto_gasto_por_viajero = gastos_por_viajero[0] if gastos_por_viajero[0] else 0
+            consolidado_viajero = {"Nombre": viajero.nombre, "Apellido": viajero.apellido, "Valor": "{:.2f}".format(monto_gasto_por_viajero)}
             matriz.append(consolidado_viajero)
 
         return matriz
