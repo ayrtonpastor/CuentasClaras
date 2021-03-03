@@ -128,12 +128,12 @@ class App_CuentasClaras(QApplication):
         self.vista_reporte_comensacion = Vista_reporte_compensacion(self)
         self.vista_reporte_comensacion.mostrar_reporte_compensacion(matriz_compensacion=self.logica.crearReporteCompensacion(actividad.id), actividad=actividad)
 
-    def mostrar_reporte_gastos_viajero(self):
+    def mostrar_reporte_gastos_viajero(self, actividad):
         """
         Esta función muestra el reporte de gastos consolidados
         """
         self.vista_reporte_gastos = Vista_reporte_gastos_viajero(self)
-        self.vista_reporte_gastos.mostar_reporte_gastos(self.logica.gastos_consolidados)
+        self.vista_reporte_gastos.mostar_reporte_gastos(lista_gastos=self.logica.crearReporteGastosPorViajero(actividad.id), actividad=actividad)
 
     def actualizar_viajeros(self, n_viajeros_en_actividad):
         """

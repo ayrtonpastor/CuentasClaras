@@ -85,10 +85,10 @@ class Vista_reporte_compensacion(QWidget):
                 else:
                     #Las etiquetas restantes deben ser los montos de dinero
                     etiqueta_valor = QLabel(
-                        self.matriz[i][j])
+                        "$"+self.matriz[i][j])
                     etiqueta_valor.setWordWrap(True)
                     etiqueta_valor.setToolTip(
-                        self.matriz[0][i] + " debe " + self.matriz[i][j] + " a " + self.matriz[0][j])
+                        self.matriz[0][i] + " debe " + "$"+self.matriz[i][j] + " a " + self.matriz[0][j])
                 etiqueta_valor.setFixedSize(100, 40)
                 self.distribuidor_tabla_compensacion.addWidget(
                     etiqueta_valor, i, j, Qt.AlignHCenter)
