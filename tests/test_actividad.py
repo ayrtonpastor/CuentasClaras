@@ -129,3 +129,10 @@ class ActividadTestCase(unittest.TestCase):
             ["Pedro Lizarazo", -1, "0.00"],
             ["Raul Calero", "499.62", -1]
         ], reporte_compensacion_actividad_2)
+
+    def test_reporte_gastos_por_viajero_en_actividad(self):
+        reporte_gastos_por_viajero_actividad4 = self.control_cuenta.crearReporteGastosPorViajero(
+            self.actividad4_id)
+        self.assertEqual([
+            []
+        ], reporte_gastos_por_viajero_actividad4)

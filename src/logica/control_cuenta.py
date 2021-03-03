@@ -74,6 +74,9 @@ class ControlCuenta():
 
         return matriz
 
+    def crearReporteGastosPorViajero(self, actividad_id):
+        pass
+
     def crearReporteCompensacionproto(self, actividad_id):
         actividad_viajeros = session.query(ActividadViajero).filter_by(actividad_id=actividad_id)
         if actividad_viajeros.count() == 0:
