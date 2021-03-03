@@ -27,9 +27,13 @@ class ViajeroTestCase(unittest.TestCase):
         apellido_viajero1 = None
         nombre_viajero2 = ""
         apellido_viajero2 = ""
+        nombre_viajero3 = "Jhon"
+        apellido_viajero3 = "Arismendiz"
 
         result1 = self.control_cuenta.crearViajero(nombre_viajero1, apellido_viajero1)
         result2 = self.control_cuenta.crearViajero(nombre_viajero2, apellido_viajero2)
+        result3 = self.control_cuenta.crearViajero(nombre_viajero3, apellido_viajero3)
 
         self.assertFalse(result1)
         self.assertFalse(result2)
+        self.assertTrue(result3)
