@@ -133,9 +133,19 @@ class ActividadTestCase(unittest.TestCase):
     def test_reporte_gastos_por_viajero_en_actividad(self):
         reporte_gastos_por_viajero_actividad4 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad4_id)
         reporte_gastos_por_viajero_actividad3 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad3_id)
+        reporte_gastos_por_viajero_actividad2 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad2_id)
+        reporte_gastos_por_viajero_actividad1 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad1_id)
 
         self.assertEqual([], reporte_gastos_por_viajero_actividad4)
         self.assertEqual([
             {"Nombre": "Dario", "Apellido": "Correal", "Valor": "0.00"},
             {"Nombre": "Raul", "Apellido": "Calero", "Valor": "0.00"}
         ], reporte_gastos_por_viajero_actividad3)
+        self.assertEqual([
+            {"Nombre": "Pedro", "Apellido": "Lizarazo", "Valor": "999.24"},
+            {"Nombre": "Raul", "Apellido": "Calero", "Valor": "0.00"}
+        ], reporte_gastos_por_viajero_actividad2)
+        self.assertEqual([
+            {"Nombre": "Dario", "Apellido": "Correal", "Valor": "1234.00"},
+            {"Nombre": "Ayrton", "Apellido": "Pastor", "Valor": "4444.00"}
+        ], reporte_gastos_por_viajero_actividad1)
