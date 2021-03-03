@@ -112,7 +112,7 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual([
             [" ", "Dario Correal", "Raul Calero"]
             ], reporte_compensacion)
-    
+
     def test_reporte_compensacion_actividad(self):
         reporte_compensacion_actividad_1 = self.control_cuenta.crearReporteCompensacion(
             self.actividad1_id)
@@ -131,6 +131,11 @@ class ActividadTestCase(unittest.TestCase):
         ], reporte_compensacion_actividad_2)
 
     def test_reporte_gastos_por_viajero_en_actividad(self):
-        reporte_gastos_por_viajero_actividad4 = self.control_cuenta.crearReporteGastosPorViajero(
-            self.actividad4_id)
+        reporte_gastos_por_viajero_actividad4 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad4_id)
+        reporte_gastos_por_viajero_actividad3 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad3_id)
+
         self.assertEqual([], reporte_gastos_por_viajero_actividad4)
+        self.assertEqual([
+            {"Nombre": "Dario", "Apellido": "Correal", "Valor": "0.00"},
+            {"Nombre": "Raul", "Apellido": "Calero", "Valor": "0.00"}
+        ], reporte_gastos_por_viajero_actividad3)
