@@ -14,6 +14,26 @@ pipeline {
                 url: 'https://github.com/MISW-4101-Practicas/' + env.GIT_REPO
             }
         }
+        stage('Gitinspector') {
+            steps {
+                script {
+                    docker.image('gitinspector-isis2603').inside('--entrypoint=""') {
+                        sh '''
+                            mkdir -p ./reports/
+                            gitinspector --file-types="py" --format=html --AxU -w -T -x author:Bocanegra -x author:estudiante > ./reports/index.html
+                        '''
+                    }
+                }
+                withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIAL_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
+                    sh('git config --global user.email "ci-isis2603@uniandes.edu.co"')
+                    sh('git config --global user.name "ci-isis2603"')
+                    sh('git add ./reports/index.html')
+                    sh('git commit -m "[ci-skip] GitInspector report added"')
+                    sh('git pull https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/MISW-4101-Practicas/${GIT_REPO} main')
+                    sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/MISW-4101-Practicas/${GIT_REPO} main')
+                }  
+            }
+        }
         stage('Install libraries') {
             steps {
                 script {
@@ -54,26 +74,6 @@ pipeline {
                     reportName: 'Coverage Report',
                     reportTitles: 'Coverage Report']
                 )
-            }
-        }
-        stage('Gitinspector') {
-            steps {
-                script {
-                    docker.image('gitinspector-isis2603').inside('--entrypoint=""') {
-                        sh '''
-                            mkdir -p ./reports/
-                            gitinspector --file-types="py" --format=html --AxU -w -T -x author:Bocanegra -x author:estudiante > ./reports/index.html
-                        '''
-                    }
-                }
-                withCredentials([usernamePassword(credentialsId: env.GIT_CREDENTIAL_ID, passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                    sh('git config --global user.email "ci-isis2603@uniandes.edu.co"')
-                    sh('git config --global user.name "ci-isis2603"')
-                    sh('git add ./reports/index.html')
-                    sh('git commit -m "[ci-skip] GitInspector report added"')
-                    sh('git pull https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/MISW-4101-Practicas/${GIT_REPO} main')
-                    sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/MISW-4101-Practicas/${GIT_REPO} main')
-                }  
             }
         }
     }
