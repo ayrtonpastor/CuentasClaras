@@ -136,5 +136,11 @@ class ControlCuenta():
         else:
             viajero = session.query(Viajero).filter_by(id=viajero_id).first()
 
-            if not viajero:
+            if viajero:
+                nvo_nombre = nvo_nombre.strip()
+                nvo_apellido = nvo_apellido.strip()
+                viajeros = session.query(Viajero).filter(Viajero.nombre == nvo_nombre, Viajero.apellido == nvo_apellido, Viajero.id != viajero_id).all()
+                if len(viajeros) > 0:
+                    return False
+            else:
                 return False

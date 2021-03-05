@@ -75,5 +75,5 @@ class ViajeroTestCase(unittest.TestCase):
         viajero2 = self.session.query(Viajero).filter(Viajero.id == self.viajero2_id).first()
 
         self.assertEqual("Dario", viajero1.nombre)
-        self.assertEqual("Pedro", viajero2.nombre)
+        self.assertEqual("Ayrton", viajero2.nombre)
         self.assertEqual(False, editar_viajero_inexistente)
