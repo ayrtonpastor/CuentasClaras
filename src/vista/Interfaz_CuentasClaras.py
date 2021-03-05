@@ -54,28 +54,26 @@ class App_CuentasClaras(QApplication):
         """
         Esta función muestra la ventana de la lista de viajeros
         """
-        self.vista_lista_viajeros=Vista_lista_viajeros(self)
-        self.vista_lista_viajeros.mostrar_viajeros(self.logica.viajeros)
+        self.vista_lista_viajeros = Vista_lista_viajeros(self)
+        self.vista_lista_viajeros.mostrar_viajeros(self.dar_viajeros())
 
     def insertar_viajero(self, nombre, apellido):
         """
         Esta función inserta un viajero en la lógica (debe modificarse cuando se construya la lógica)
         """
         crear_viajero = self.logica.crearViajero(nombre, apellido)
-        if crear_viajero:
-            self.logica.viajeros.append({"Nombre": nombre, "Apellido": apellido})
-        else:
+        if crear_viajero is False:
             mensaje_error = QMessageBox()
             mensaje_error.setIcon(QMessageBox.Critical)
             mensaje_error.setWindowTitle("Error al guardar los cambios")
             if nombre is None or nombre == "" or apellido is None or apellido == "":
-                mensaje_error.setText("No puede dejar espacios en blanco.")
+                mensaje_error.setText("El nombre y el apellido no deben estar en blanco.")
             else:
                 mensaje_error.setText("Ya existe un viajero con estos datos.")
             mensaje_error.setStandardButtons(QMessageBox.Ok)
             mensaje_error.exec_()
 
-        self.vista_lista_viajeros.mostrar_viajeros(self.logica.viajeros)
+        self.vista_lista_viajeros.mostrar_viajeros(self.dar_viajeros())
 
     def editar_viajero(self, indice_viajero, nombre, apellido):
         """
@@ -145,7 +143,7 @@ class App_CuentasClaras(QApplication):
         """
         Esta función pasa la lista de viajeros (debe implementarse como una lista de diccionarios o str)
         """
-        return self.logica.viajeros
+        return self.logica.listarViajeros()
 
     def dar_viajeros_en_actividad(self):
         """

@@ -107,31 +107,31 @@ class Vista_lista_viajeros(QWidget):
         numero_fila = 0
         for viajero in self.viajeros:
 
-            etiqueta_nombre=QLabel(viajero["Nombre"])          
+            etiqueta_nombre = QLabel(viajero.nombre)
             etiqueta_nombre.setWordWrap(True)
             etiqueta_nombre.setFixedSize(90,40)
-            self.distribuidor_tabla_viajeros.addWidget(etiqueta_nombre, numero_fila+1,0, Qt.AlignTop)
+            self.distribuidor_tabla_viajeros.addWidget(etiqueta_nombre, numero_fila+1, 0, Qt.AlignTop)
 
-            etiqueta_apellido=QLabel(viajero["Apellido"])          
+            etiqueta_apellido = QLabel(viajero.apellido)
             etiqueta_apellido.setWordWrap(True)
             etiqueta_apellido.setFixedSize(90,40)
-            self.distribuidor_tabla_viajeros.addWidget(etiqueta_apellido, numero_fila+1,1, Qt.AlignTop)
+            self.distribuidor_tabla_viajeros.addWidget(etiqueta_apellido, numero_fila+1, 1, Qt.AlignTop)
 
-            etiqueta_eliminar=QPushButton("",self)
+            etiqueta_eliminar = QPushButton("",self)
             etiqueta_eliminar.setToolTip("Delete")
             etiqueta_eliminar.setFixedSize(30,30)
             etiqueta_eliminar.setIcon(QIcon("src/recursos/005-delete.png"))
-            etiqueta_eliminar.clicked.connect(partial(self.eliminar_viajero, numero_fila) )
-            self.distribuidor_tabla_viajeros.addWidget(etiqueta_eliminar, numero_fila+1,2,Qt.AlignTop)
+            etiqueta_eliminar.clicked.connect(partial(self.eliminar_viajero, viajero.id))
+            self.distribuidor_tabla_viajeros.addWidget(etiqueta_eliminar, numero_fila+1, 2, Qt.AlignTop)
 
-            boton_editar=QPushButton("",self)
+            boton_editar = QPushButton("",self)
             boton_editar.setToolTip("Edit")
             boton_editar.setFixedSize(30,30)
             boton_editar.setIcon(QIcon("src/recursos/004-edit-button.png"))
-            boton_editar.clicked.connect(partial(self.mostrar_dialogo_editar_viajero, numero_fila) )
-            self.distribuidor_tabla_viajeros.addWidget(boton_editar, numero_fila+1,3,Qt.AlignTop)
+            boton_editar.clicked.connect(partial(self.mostrar_dialogo_editar_viajero, viajero.id))
+            self.distribuidor_tabla_viajeros.addWidget(boton_editar, numero_fila+1, 3, Qt.AlignTop)
 
-            numero_fila=numero_fila+1
+            numero_fila = numero_fila+1
 
         #Elemento para ajustar la forma de la tabla (y evitar que queden muy espaciados)
         self.distribuidor_tabla_viajeros.layout().setRowStretch(numero_fila+1, 1)
@@ -142,7 +142,7 @@ class Vista_lista_viajeros(QWidget):
         """    
         dialogo=Dialogo_crear_viajero(self.viajeros[indice_viajero])        
         dialogo.exec_()
-        if dialogo.resultado==1:            
+        if dialogo.resultado==1:
             self.interfaz.editar_viajero(indice_viajero, dialogo.texto_nombre.text(), dialogo.texto_apellido.text())
 
     def eliminar_viajero(self, indice_viajero):
@@ -167,5 +167,3 @@ class Vista_lista_viajeros(QWidget):
         """    
         self.interfaz.mostrar_vista_lista_actividades()
         self.close()
-
-   

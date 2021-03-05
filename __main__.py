@@ -17,4 +17,3 @@ if __name__ == '__main__':
         sys.exit(app.exec_())
     finally:
         factory_mockup_data.tearDown()
-        
