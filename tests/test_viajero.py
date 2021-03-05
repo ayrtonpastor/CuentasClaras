@@ -64,13 +64,16 @@ class ViajeroTestCase(unittest.TestCase):
     def test_editar_viajero(self):
         nuevo_nombre1 = ""
         nuevo_apellido1 = None
-        nuevo_nombre2 = "Juan"
-        nuevo_apellido2 = "Flores"
+        nuevo_nombre2 = "Pedro"
+        nuevo_apellido2 = "Lizarazo"
 
         self.control_cuenta.editarViajero(self.viajero1_id, nuevo_nombre1, nuevo_apellido1)
+        self.control_cuenta.editarViajero(self.viajero2_id, nuevo_nombre2, nuevo_apellido2)
         editar_viajero_inexistente = self.control_cuenta.editarViajero(200, nuevo_nombre2, nuevo_apellido2)
 
         viajero1 = self.session.query(Viajero).filter(Viajero.id == self.viajero1_id).first()
+        viajero2 = self.session.query(Viajero).filter(Viajero.id == self.viajero2_id).first()
 
         self.assertEqual("Dario", viajero1.nombre)
+        self.assertEqual("Pedro", viajero2.nombre)
         self.assertEqual(False, editar_viajero_inexistente)
