@@ -129,3 +129,6 @@ class ControlCuenta():
                 return True
             else:
                 return False
+
+    def editarViajero(self, viajero_id, nvo_nombre, nvo_apellido):
+        pass

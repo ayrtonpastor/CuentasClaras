@@ -19,6 +19,11 @@ class ViajeroTestCase(unittest.TestCase):
         self.session.flush()
 
         self.session.commit()
+
+        self.viajero1_id = self.viajero1.id
+        self.viajero2_id = self.viajero2.id
+        self.viajero3_id = self.viajero3.id
+
         self.session.close()
 
     def tearDown(self):
@@ -55,3 +60,11 @@ class ViajeroTestCase(unittest.TestCase):
         self.assertFalse(result2)
         self.assertTrue(result3)
         self.assertFalse(result4)
+
+    def test_editar_viajero(self):
+        nuevo_nombre1 = ""
+        nuevo_apellido1 = None
+
+        result1 = self.control_cuenta.editarViajero(self.viajero1_id, nuevo_nombre1, nuevo_apellido1)
+
+        self.assertEqual(result1, False)
