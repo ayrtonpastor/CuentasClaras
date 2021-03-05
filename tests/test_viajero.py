@@ -66,14 +66,19 @@ class ViajeroTestCase(unittest.TestCase):
         nuevo_apellido1 = None
         nuevo_nombre2 = "Pedro"
         nuevo_apellido2 = "Lizarazo"
+        nuevo_nombre3 = "Juan"
+        nuevo_apellido3 = "Flores"
 
         self.control_cuenta.editarViajero(self.viajero1_id, nuevo_nombre1, nuevo_apellido1)
         self.control_cuenta.editarViajero(self.viajero2_id, nuevo_nombre2, nuevo_apellido2)
+        self.control_cuenta.editarViajero(self.viajero3_id, nuevo_nombre3, nuevo_apellido3)
         editar_viajero_inexistente = self.control_cuenta.editarViajero(200, nuevo_nombre2, nuevo_apellido2)
 
         viajero1 = self.session.query(Viajero).filter(Viajero.id == self.viajero1_id).first()
         viajero2 = self.session.query(Viajero).filter(Viajero.id == self.viajero2_id).first()
+        viajero3 = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).first()
 
         self.assertEqual("Dario", viajero1.nombre)
         self.assertEqual("Ayrton", viajero2.nombre)
+        self.assertEqual("Juan", viajero3.nombre)
         self.assertEqual(False, editar_viajero_inexistente)
