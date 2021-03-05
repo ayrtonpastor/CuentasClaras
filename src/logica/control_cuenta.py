@@ -113,7 +113,7 @@ class ControlCuenta():
         return actividad.gastos
 
     def listarViajeros(self):
-        pass
+        return session.query(Viajero).all()
 
     def crearViajero(self, nombre, apellido):
         if nombre is None or nombre == "" or apellido is None or apellido == "":

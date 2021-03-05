@@ -15,9 +15,11 @@ class ViajeroTestCase(unittest.TestCase):
         self.viajero2 = Viajero(nombre="Ayrton", apellido="Pastor")
         self.viajero3 = Viajero(nombre="Pedro", apellido="Lizarazo")
 
-        self.session.add_all(
-            [self.viajero1, self.viajero2, self.viajero3])
+        self.session.add_all([self.viajero1, self.viajero2, self.viajero3])
         self.session.flush()
+
+        self.session.commit()
+        self.session.close()
 
     def tearDown(self):
         self.session = Session()
