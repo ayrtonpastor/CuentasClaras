@@ -112,6 +112,9 @@ class ControlCuenta():
         actividad = session.query(Actividad).filter_by(id=actividad_id).first()
         return actividad.gastos
 
+    def listarViajeros(self):
+        pass
+
     def crearViajero(self, nombre, apellido):
         if nombre is None or nombre == "" or apellido is None or apellido == "":
             return False

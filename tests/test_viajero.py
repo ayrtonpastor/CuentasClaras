@@ -10,6 +10,14 @@ class ViajeroTestCase(unittest.TestCase):
         """ Crear Control cuenta"""
         self.control_cuenta = ControlCuenta()
         self.session = Session()
+        
+        self.viajero1 = Viajero(nombre="Dario", apellido="Correal")
+        self.viajero2 = Viajero(nombre="Ayrton", apellido="Pastor")
+        self.viajero3 = Viajero(nombre="Pedro", apellido="Lizarazo")
+
+        self.session.add_all(
+            [self.viajero1, self.viajero2, self.viajero3])
+        self.session.flush()
 
     def tearDown(self):
         self.session = Session()
@@ -21,6 +29,10 @@ class ViajeroTestCase(unittest.TestCase):
 
         self.session.commit()
         self.session.close()
+
+    def test_listar_viajeros(self):
+        viajeros = self.control_cuenta.listarViajeros()
+        self.assertEqual(len(viajeros), 3)
 
     def test_crear_viajero(self):
         nombre_viajero1 = None
