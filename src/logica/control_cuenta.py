@@ -133,3 +133,8 @@ class ControlCuenta():
     def editarViajero(self, viajero_id, nvo_nombre, nvo_apellido):
         if nvo_nombre is None or nvo_nombre == "" or nvo_apellido is None or nvo_apellido == "":
             return False
+        else:
+            viajero = session.query(Viajero).filter_by(id=viajero_id).first()
+
+            if not viajero:
+                return False
