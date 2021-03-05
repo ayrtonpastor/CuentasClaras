@@ -140,7 +140,12 @@ class ControlCuenta():
                 nvo_nombre = nvo_nombre.strip()
                 nvo_apellido = nvo_apellido.strip()
                 viajeros = session.query(Viajero).filter(Viajero.nombre == nvo_nombre, Viajero.apellido == nvo_apellido, Viajero.id != viajero_id).all()
-                if len(viajeros) > 0:
+                if len(viajeros) == 0:
+                    viajero.nombre = nvo_nombre
+                    viajero.apellido = nvo_apellido
+                    session.commit()
+                    return True
+                else:
                     return False
             else:
                 return False
