@@ -128,7 +128,7 @@ class Vista_lista_viajeros(QWidget):
             boton_editar.setToolTip("Edit")
             boton_editar.setFixedSize(30,30)
             boton_editar.setIcon(QIcon("src/recursos/004-edit-button.png"))
-            boton_editar.clicked.connect(partial(self.mostrar_dialogo_editar_viajero, viajero.id))
+            boton_editar.clicked.connect(partial(self.mostrar_dialogo_editar_viajero, viajero))
             self.distribuidor_tabla_viajeros.addWidget(boton_editar, numero_fila+1, 3, Qt.AlignTop)
 
             numero_fila = numero_fila+1
@@ -136,14 +136,14 @@ class Vista_lista_viajeros(QWidget):
         #Elemento para ajustar la forma de la tabla (y evitar que queden muy espaciados)
         self.distribuidor_tabla_viajeros.layout().setRowStretch(numero_fila+1, 1)
 
-    def mostrar_dialogo_editar_viajero(self, indice_viajero):
+    def mostrar_dialogo_editar_viajero(self, viajero):
         """
         Esta función ejecuta el diálogo para editar un viajero
         """    
-        dialogo=Dialogo_crear_viajero(self.viajeros[indice_viajero])        
+        dialogo=Dialogo_crear_viajero(viajero)
         dialogo.exec_()
         if dialogo.resultado==1:
-            self.interfaz.editar_viajero(indice_viajero, dialogo.texto_nombre.text(), dialogo.texto_apellido.text())
+            self.interfaz.editar_viajero(viajero, dialogo.texto_nombre.text(), dialogo.texto_apellido.text())
 
     def eliminar_viajero(self, indice_viajero):
         """

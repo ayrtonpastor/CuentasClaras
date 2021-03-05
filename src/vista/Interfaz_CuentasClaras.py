@@ -75,12 +75,23 @@ class App_CuentasClaras(QApplication):
 
         self.vista_lista_viajeros.mostrar_viajeros(self.dar_viajeros())
 
-    def editar_viajero(self, indice_viajero, nombre, apellido):
+    def editar_viajero(self, viajero, nombre, apellido):
         """
         Esta función edita un viajero en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.viajeros[indice_viajero] = {"Nombre":nombre, "Apellido":apellido}
-        self.vista_lista_viajeros.mostrar_viajeros(self.logica.viajeros)
+        editar_viajero = self.logica.editarViajero(viajero.id, nombre, apellido)
+        if not editar_viajero:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al guardar los cambios")
+            if nombre is None or nombre == "" or apellido is None or apellido == "":
+                mensaje_error.setText("El nombre y el apellido no deben estar en blanco.")
+            else:
+                mensaje_error.setText("Ya existe un viajero con estos datos.")
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+
+        self.vista_lista_viajeros.mostrar_viajeros(self.dar_viajeros())
 
     def eliminar_viajero(self, indice_viajero):
         """

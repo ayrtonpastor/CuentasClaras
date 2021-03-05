@@ -65,8 +65,8 @@ class Dialogo_crear_viajero(QDialog):
         #Si el diálogo se va a usar para editar, se pone la información correspondiente en los campos de texto
 
         if (viajero!=None):
-            self.texto_nombre.setText(viajero["Nombre"])
-            self.texto_apellido.setText(viajero["Apellido"])
+            self.texto_nombre.setText(viajero.nombre)
+            self.texto_apellido.setText(viajero.apellido)
 
 
     def guardar(self):
