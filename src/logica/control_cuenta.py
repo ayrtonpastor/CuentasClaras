@@ -131,4 +131,5 @@ class ControlCuenta():
                 return False
 
     def editarViajero(self, viajero_id, nvo_nombre, nvo_apellido):
-        pass
+        if nvo_nombre is None or nvo_nombre == "" or nvo_apellido is None or nvo_apellido == "":
+            return False
