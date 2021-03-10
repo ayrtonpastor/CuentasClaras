@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 from PyQt5.QtWidgets import QApplication
 from src.vista.Interfaz_CuentasClaras import App_CuentasClaras
