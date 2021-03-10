@@ -149,3 +149,6 @@ class ControlCuenta():
                     return False
             else:
                 return False
+    
+    def crearActividad(self):
+        return None
