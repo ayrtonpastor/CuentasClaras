@@ -223,5 +223,5 @@ class ActividadTestCase(unittest.TestCase):
         nombre_actividad = actividad_con_nombre.nombre
         self.assertEqual(nombre_actividad, "integracion")
 
-        self.assertRaises(IntegrityError, self.control_cuenta.crearActividad("integracion"))
-        
+        with self.assertRaises(IntegrityError):
+            self.assertRaises(self.control_cuenta.crearActividad("integracion"))
