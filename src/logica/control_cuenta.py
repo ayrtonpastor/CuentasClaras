@@ -151,4 +151,9 @@ class ControlCuenta():
                 return False
     
     def crearActividad(self, nombre):
-        return None
+        if not nombre:
+            return None
+        _actividad = Actividad(nombre=nombre, terminada=False)
+        session.add(_actividad)
+        session.commit()
+        return _actividad
