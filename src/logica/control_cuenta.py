@@ -1,4 +1,5 @@
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 
 from src.modelo.declarative_base import engine, Base, session
 from src.modelo.actividad import Actividad, ActividadViajero
@@ -153,7 +154,10 @@ class ControlCuenta():
     def crearActividad(self, nombre):
         if not nombre:
             return None
-        _actividad = Actividad(nombre=nombre, terminada=False)
-        session.add(_actividad)
-        session.commit()
-        return _actividad
+        try:
+            _actividad = Actividad(nombre=nombre, terminada=False)
+            session.add(_actividad)
+            session.commit()
+            return _actividad
+        except IntegrityError as exception:
+            raise exception
