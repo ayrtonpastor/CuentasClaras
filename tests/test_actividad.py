@@ -214,3 +214,8 @@ class ActividadTestCase(unittest.TestCase):
         self.control_cuenta.crearActividad("")
         actividad_vacia = self.session.query(Actividad).filter( Actividad.nombre == "" ).first()
         self.assertEqual(actividad_vacia, None) #No pueden existir actividades vacias
+        self.control_cuenta.crearActividad("integracion")
+        actividad_con_nombre = self.session.query(Actividad).filter( Actividad.nombre == "integracion").first()
+        self.assertNotEqual(actividad_con_nombre, None)
+        nombre_actividad = actividad_con_nombre.nombre
+        self.assertEqual(nombre_actividad, "integracion")
