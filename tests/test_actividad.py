@@ -7,6 +7,7 @@ from src.modelo.actividad import Actividad, ActividadViajero
 from src.modelo.gasto import Gasto
 from src.modelo.viajero import Viajero
 from src.modelo.declarative_base import Session
+from sqlalchemy.exc import IntegrityError
 
 
 class ActividadTestCase(unittest.TestCase):
@@ -211,11 +212,16 @@ class ActividadTestCase(unittest.TestCase):
 
     def test_crear_actividad(self):
         self.assertEqual(None, self.control_cuenta.crearActividad(None))
+        
         self.control_cuenta.crearActividad("")
         actividad_vacia = self.session.query(Actividad).filter( Actividad.nombre == "" ).first()
         self.assertEqual(actividad_vacia, None) #No pueden existir actividades vacias
+
         self.control_cuenta.crearActividad("integracion")
         actividad_con_nombre = self.session.query(Actividad).filter( Actividad.nombre == "integracion").first()
         self.assertNotEqual(actividad_con_nombre, None)
         nombre_actividad = actividad_con_nombre.nombre
         self.assertEqual(nombre_actividad, "integracion")
+
+        self.assertRaises(IntegrityError, self.control_cuenta.crearActividad("integracion"))
+        
