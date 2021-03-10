@@ -21,7 +21,7 @@ class ActividadTestCase(unittest.TestCase):
         nombre_actividad2 = self.data_factory.name()
         nombre_actividad3 = self.data_factory.name()
         nombre_actividad4 = self.data_factory.name()
-        
+
         self.actividad1 = Actividad(nombre=nombre_actividad1, terminada=False)
         self.actividad2 = Actividad(nombre=nombre_actividad2, terminada=False)
         self.actividad3 = Actividad(nombre=nombre_actividad3, terminada=False)
@@ -34,16 +34,20 @@ class ActividadTestCase(unittest.TestCase):
         nombre_viajero2 = self.data_factory.name()
         nombre_viajero3 = self.data_factory.name()
         nombre_viajero4 = self.data_factory.name()
-        
+
         apellido_viajero1 = self.data_factory.name()
         apellido_viajero2 = self.data_factory.name()
         apellido_viajero3 = self.data_factory.name()
         apellido_viajero4 = self.data_factory.name()
-        
-        self.viajero1 = Viajero(nombre=nombre_viajero1, apellido=apellido_viajero1)
-        self.viajero2 = Viajero(nombre=nombre_viajero2, apellido=apellido_viajero2)
-        self.viajero3 = Viajero(nombre=nombre_viajero3, apellido=apellido_viajero3)
-        self.viajero4 = Viajero(nombre=nombre_viajero4, apellido=apellido_viajero4)
+
+        self.viajero1 = Viajero(nombre=nombre_viajero1,
+                                apellido=apellido_viajero1)
+        self.viajero2 = Viajero(nombre=nombre_viajero2,
+                                apellido=apellido_viajero2)
+        self.viajero3 = Viajero(nombre=nombre_viajero3,
+                                apellido=apellido_viajero3)
+        self.viajero4 = Viajero(nombre=nombre_viajero4,
+                                apellido=apellido_viajero4)
 
         self.session.add_all(
             [self.viajero1, self.viajero2, self.viajero3, self.viajero4])
@@ -133,21 +137,27 @@ class ActividadTestCase(unittest.TestCase):
         reporte_compensacion = self.control_cuenta.crearReporteCompensacion(
             self.actividad3_id)
 
-        viajero1 = self.session.query(Viajero).filter(Viajero.id == self.viajero1_id).first()
-        viajero4 = self.session.query(Viajero).filter(Viajero.id == self.viajero4_id).first()
+        viajero1 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero1_id).first()
+        viajero4 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero4_id).first()
 
         self.assertEqual([
             [" ", viajero1.nombre_completo(), viajero4.nombre_completo()]
-            ], reporte_compensacion)
+        ], reporte_compensacion)
 
     def test_reporte_compensacion_actividad(self):
         reporte_compensacion_actividad_1 = self.control_cuenta.crearReporteCompensacion(
             self.actividad1_id)
 
-        viajero1 = self.session.query(Viajero).filter(Viajero.id == self.viajero1_id).first()
-        viajero2 = self.session.query(Viajero).filter(Viajero.id == self.viajero2_id).first()
-        viajero3 = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).first()
-        viajero4 = self.session.query(Viajero).filter(Viajero.id == self.viajero4_id).first()
+        viajero1 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero1_id).first()
+        viajero2 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero2_id).first()
+        viajero3 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero3_id).first()
+        viajero4 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero4_id).first()
 
         self.assertEqual([
             [" ", viajero1.nombre_completo(), viajero2.nombre_completo()],
@@ -164,15 +174,23 @@ class ActividadTestCase(unittest.TestCase):
         ], reporte_compensacion_actividad_2)
 
     def test_reporte_gastos_por_viajero_en_actividad(self):
-        reporte_gastos_por_viajero_actividad4 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad4_id)
-        reporte_gastos_por_viajero_actividad3 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad3_id)
-        reporte_gastos_por_viajero_actividad2 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad2_id)
-        reporte_gastos_por_viajero_actividad1 = self.control_cuenta.crearReporteGastosPorViajero(self.actividad1_id)
+        reporte_gastos_por_viajero_actividad4 = self.control_cuenta.crearReporteGastosPorViajero(
+            self.actividad4_id)
+        reporte_gastos_por_viajero_actividad3 = self.control_cuenta.crearReporteGastosPorViajero(
+            self.actividad3_id)
+        reporte_gastos_por_viajero_actividad2 = self.control_cuenta.crearReporteGastosPorViajero(
+            self.actividad2_id)
+        reporte_gastos_por_viajero_actividad1 = self.control_cuenta.crearReporteGastosPorViajero(
+            self.actividad1_id)
 
-        viajero1 = self.session.query(Viajero).filter(Viajero.id == self.viajero1_id).first()
-        viajero2 = self.session.query(Viajero).filter(Viajero.id == self.viajero2_id).first()
-        viajero3 = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).first()
-        viajero4 = self.session.query(Viajero).filter(Viajero.id == self.viajero4_id).first()
+        viajero1 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero1_id).first()
+        viajero2 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero2_id).first()
+        viajero3 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero3_id).first()
+        viajero4 = self.session.query(Viajero).filter(
+            Viajero.id == self.viajero4_id).first()
 
         self.assertEqual([], reporte_gastos_por_viajero_actividad4)
         self.assertEqual([
@@ -180,10 +198,13 @@ class ActividadTestCase(unittest.TestCase):
             {"Nombre": viajero4.nombre, "Apellido": viajero4.apellido, "Valor": "0.00"}
         ], reporte_gastos_por_viajero_actividad3)
         self.assertEqual([
-            {"Nombre": viajero3.nombre, "Apellido": viajero3.apellido, "Valor": "999.24"},
+            {"Nombre": viajero3.nombre,
+                "Apellido": viajero3.apellido, "Valor": "999.24"},
             {"Nombre": viajero4.nombre, "Apellido": viajero4.apellido, "Valor": "0.00"}
         ], reporte_gastos_por_viajero_actividad2)
         self.assertEqual([
-            {"Nombre": viajero1.nombre, "Apellido": viajero1.apellido, "Valor": "1234.00"},
-            {"Nombre": viajero2.nombre, "Apellido": viajero2.apellido, "Valor": "4444.00"}
+            {"Nombre": viajero1.nombre,
+                "Apellido": viajero1.apellido, "Valor": "1234.00"},
+            {"Nombre": viajero2.nombre,
+                "Apellido": viajero2.apellido, "Valor": "4444.00"}
         ], reporte_gastos_por_viajero_actividad1)
