@@ -210,4 +210,7 @@ class ActividadTestCase(unittest.TestCase):
         ], reporte_gastos_por_viajero_actividad1)
 
     def test_crear_actividad(self):
-        self.assertEqual(None, self.control_cuenta.crearActividad())
+        self.assertEqual(None, self.control_cuenta.crearActividad(None))
+        self.control_cuenta.crearActividad("")
+        actividad_vacia = self.session.query(Actividad).filter( Actividad.nombre == "" ).first()
+        self.assertEqual(actividad_vacia, None) #No pueden existir actividades vacias
