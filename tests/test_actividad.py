@@ -208,3 +208,6 @@ class ActividadTestCase(unittest.TestCase):
             {"Nombre": viajero2.nombre,
                 "Apellido": viajero2.apellido, "Valor": "4444.00"}
         ], reporte_gastos_por_viajero_actividad1)
+
+    def test_crear_actividad(self):
+        self.assertEqual(None, self.control_cuenta.crearActividad())
