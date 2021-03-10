@@ -32,8 +32,28 @@ class App_CuentasClaras(QApplication):
         """
         Esta función inserta una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.actividades.append(nombre)
-        self.vista_lista_actividades.mostrar_actividades(self.logica.actividades)
+        try:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al crear actividad")
+
+            if not nombre:
+                raise ValueError("El nombre no puede ser vacio")
+
+            self.logica.crearActividad(nombre)
+            self.vista_lista_actividades.mostrar_actividades(self.logica.listarActividades())
+        except ValueError as e:
+            mensaje_error.setText("El nombre de la actividad no puede ser vacio.")
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+        except Exception as e:
+            mensaje_error.setText("El nombre de la actividad está repetido.")
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+            
+
+            
+
 
     def editar_actividad(self, indice_actividad, nombre):
         """
