@@ -1,8 +1,9 @@
 import unittest
 
+from faker import Faker
 from src.logica.control_cuenta import ControlCuenta
-from src.modelo.viajero import Viajero
 from src.modelo.declarative_base import Session
+from src.modelo.viajero import Viajero
 
 
 class ViajeroTestCase(unittest.TestCase):
@@ -10,6 +11,8 @@ class ViajeroTestCase(unittest.TestCase):
         """ Crear Control cuenta"""
         self.control_cuenta = ControlCuenta()
         self.session = Session()
+        """ Generación de datos aleatorios """
+        self.data_factory = Faker()
         
         self.viajero1 = Viajero(nombre="Dario", apellido="Correal")
         self.viajero2 = Viajero(nombre="Ayrton", apellido="Pastor")
@@ -43,23 +46,25 @@ class ViajeroTestCase(unittest.TestCase):
 
     def test_crear_viajero(self):
         nombre_viajero1 = None
-        apellido_viajero1 = None
+        apellido_viajero1 = ""
         nombre_viajero2 = ""
-        apellido_viajero2 = ""
-        nombre_viajero3 = "Jhon"
-        apellido_viajero3 = "Arismendiz"
-        nombre_viajero4 = "Jhon"
-        apellido_viajero4 = "Arismendiz"
+        apellido_viajero2 = None
+        nombre_viajero3 = self.data_factory.name()
+        apellido_viajero3 = self.data_factory.name()
+        nombre_viajero4 = nombre_viajero3
+        apellido_viajero4 = apellido_viajero3
 
-        result1 = self.control_cuenta.crearViajero(nombre_viajero1, apellido_viajero1)
-        result2 = self.control_cuenta.crearViajero(nombre_viajero2, apellido_viajero2)
-        result3 = self.control_cuenta.crearViajero(nombre_viajero3, apellido_viajero3)
-        result4 = self.control_cuenta.crearViajero(nombre_viajero4, apellido_viajero4)
+        crear_viajero1 = self.control_cuenta.crearViajero(nombre_viajero1, apellido_viajero1)
+        crear_viajero2 = self.control_cuenta.crearViajero(nombre_viajero2, apellido_viajero2)
+        self.control_cuenta.crearViajero(nombre_viajero3, apellido_viajero3)
+        crear_viajero4 = self.control_cuenta.crearViajero(nombre_viajero4, apellido_viajero4)
 
-        self.assertFalse(result1)
-        self.assertFalse(result2)
-        self.assertTrue(result3)
-        self.assertFalse(result4)
+        viajero3 = self.session.query(Viajero).filter(Viajero.nombre == nombre_viajero3, Viajero.apellido == apellido_viajero3).first()
+
+        self.assertEqual(False, crear_viajero1)
+        self.assertEqual(False, crear_viajero2)
+        self.assertTrue(nombre_viajero3, viajero3.nombre)
+        self.assertEqual(False, crear_viajero4)
 
     def test_editar_viajero(self):
         nuevo_nombre1 = ""
