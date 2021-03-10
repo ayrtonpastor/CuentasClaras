@@ -150,5 +150,5 @@ class ControlCuenta():
             else:
                 return False
     
-    def crearActividad(self):
+    def crearActividad(self, nombre):
         return None
