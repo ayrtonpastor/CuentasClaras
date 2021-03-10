@@ -8,3 +8,6 @@ class Viajero(Base):
     id = Column(Integer, primary_key=True)
     nombre = Column(String)
     apellido = Column(String)
+
+    def nombre_completo(self):
+        return self.nombre+' '+self.apellido
