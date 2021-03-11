@@ -212,20 +212,23 @@ class ActividadTestCase(unittest.TestCase):
 
     def test_crear_actividad(self):
         self.assertEqual(None, self.control_cuenta.crearActividad(None))
-        
+
         self.control_cuenta.crearActividad("")
-        actividad_vacia = self.session.query(Actividad).filter( Actividad.nombre == "" ).first()
-        self.assertEqual(actividad_vacia, None) #No pueden existir actividades vacias
+        actividad_vacia = self.session.query(
+            Actividad).filter(Actividad.nombre == "").first()
+        # No pueden existir actividades vacias
+        self.assertEqual(actividad_vacia, None)
 
         self.control_cuenta.crearActividad("integracion")
-        actividad_con_nombre = self.session.query(Actividad).filter( Actividad.nombre == "integracion").first()
+        actividad_con_nombre = self.session.query(Actividad).filter(
+            Actividad.nombre == "integracion").first()
         self.assertNotEqual(actividad_con_nombre, None)
         nombre_actividad = actividad_con_nombre.nombre
         self.assertEqual(nombre_actividad, "integracion")
 
         with self.assertRaises(IntegrityError):
             self.control_cuenta.crearActividad("integracion")
-    
+
     def test_asociar_viajero_a_actividad(self):
         self.assertEqual(
             None, self.control_cuenta.asociarViajeroAActividad(None, None))
@@ -237,7 +240,7 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(actividad_viajero.actividad_id, self.actividad4_id)
         self.assertEqual(actividad_viajero.viajero_id, self.viajero4_id)
 
-        #El viajero no existe
+        # El viajero no existe
         self.session = Session()
         self.session.delete(self.viajero4)
         self.session.commit()
@@ -245,24 +248,27 @@ class ActividadTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             self.control_cuenta.asociarViajeroAActividad(
                 actividad_id=self.actividad4_id, viajero_id=self.viajero4_id)
-    
+
     def test_retirar_viajero_actividad(self):
-        self.assertEqual(None, self.control_cuenta.eliminarActividadViajero(None, None))
+        self.assertEqual(
+            None, self.control_cuenta.eliminarActividadViajero(None, None))
 
-        #Viajero con gastos
+        # Viajero con gastos
         with self.assertRaises(Exception):
-            self.control_cuenta.eliminarActividadViajero(self.actividad1_id, self.viajero1_id)
+            self.control_cuenta.eliminarActividadViajero(
+                self.actividad1_id, self.viajero1_id)
 
-        #Actividad terminada
+        # Actividad terminada
         self.session = Session()
         self.actividad1.terminada = True
         self.session.add(self.actividad1)
         self.session.commit()
-        
+
         with self.assertRaises(Exception):
-            self.control_cuenta.eliminarActividadViajero(self.actividad1_id, self.viajero1_id)
-        
-        #Eliminacion efectiva
+            self.control_cuenta.eliminarActividadViajero(
+                self.actividad1_id, self.viajero1_id)
+
+        # Eliminacion efectiva
         self.control_cuenta.eliminarActividadViajero(
             self.actividad3_id, self.viajero1_id)
         count = self.session.query(ActividadViajero).filter(ActividadViajero.actividad_id ==
@@ -270,5 +276,3 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(0, count)
 
         self.session.close()
-        
-
