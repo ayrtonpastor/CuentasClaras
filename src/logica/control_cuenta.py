@@ -170,4 +170,6 @@ class ControlCuenta():
         except IntegrityError as exception:
             session.rollback()
             raise exception
+    def eliminarActividadViajero(self):
+        return None
     
