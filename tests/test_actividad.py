@@ -230,9 +230,10 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(
             None, self.control_cuenta.asociarViajeroAActividad(None, None))
 
-        self.control_cuenta.asociarViajeroAActividad(actividad_id=self.actividad4_id, viajero_id=self.viajero4_id)
+        self.control_cuenta.asociarViajeroAActividad(
+            actividad_id=self.actividad4_id, viajero_id=self.viajero4_id)
         actividad_viajero = self.session.query(ActividadViajero).filter(ActividadViajero.actividad_id ==
-                                                    self.actividad4_id, ActividadViajero.viajero_id == self.viajero4_id).first()
+                                                                        self.actividad4_id, ActividadViajero.viajero_id == self.viajero4_id).first()
         self.assertEqual(actividad_viajero.actividad_id, self.actividad4_id)
         self.assertEqual(actividad_viajero.viajero_id, self.viajero4_id)
 
@@ -242,4 +243,5 @@ class ActividadTestCase(unittest.TestCase):
         self.session.commit()
         self.session.close()
         with self.assertRaises(Exception):
-            self.assertEqual(None, self.control_cuenta.asociarViajeroAActividad(actividad_id=self.actividad4_id, viajero_id=self.viajero4_id))
+            self.assertEqual(None, self.control_cuenta.asociarViajeroAActividad(
+                actividad_id=self.actividad4_id, viajero_id=self.viajero4_id))
