@@ -225,3 +225,7 @@ class ActividadTestCase(unittest.TestCase):
 
         with self.assertRaises(IntegrityError):
             self.assertRaises(self.control_cuenta.crearActividad("integracion"))
+    
+    def test_asociar_viajero_a_actividad(self):
+        self.assertEqual(None, self.control_cuenta.asociarViajeroAActividad())
+        
