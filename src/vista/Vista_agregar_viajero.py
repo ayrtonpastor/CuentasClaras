@@ -63,11 +63,12 @@ class Dialogo_agregar_viajeros(QDialog):
         self.lista_cajas_de_chequeo = []
         indice_viajero = 0
         numero_fila = 4
-        for viajero in self.viajeros:
-            caja_de_chequeo = QCheckBox(viajero["Nombre"])
+        for tupla_viajero in self.viajeros:
+            viajero = tupla_viajero[0]
+            caja_de_chequeo = QCheckBox(viajero.nombre + " " + viajero.apellido)
             self.lista_cajas_de_chequeo.append(caja_de_chequeo)
-
-            if viajero["Presente"]:
+            esta_presente = tupla_viajero[1]
+            if esta_presente:
                 caja_de_chequeo.setChecked(True)
 
             self.distribuidor_tabla_viajeros.addWidget(
@@ -79,13 +80,18 @@ class Dialogo_agregar_viajeros(QDialog):
         Esta función envía la información de que se han guardado los cambios
         """   
         idx = 0
+        self.nuevos_viajeros = []
+        self.eliminar_viajeros = []
         for idx in range(len(self.lista_cajas_de_chequeo)):
             checkbox = self.lista_cajas_de_chequeo[idx]
+            existente = self.viajeros[idx][1]
+            m_viajero = self.viajeros[idx][0]
             if checkbox.isChecked():
-                self.viajeros[idx]["Presente"] = True
+                if not existente:
+                    self.nuevos_viajeros.append(m_viajero)    
             else:
-                self.viajeros[idx]["Presente"] = False
-
+                #TODO: Historia de usuario eliminar viajero de actividad
+                pass
         self.resultado = 1
         self.close()
         return self.resultado

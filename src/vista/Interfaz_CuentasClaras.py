@@ -164,11 +164,19 @@ class App_CuentasClaras(QApplication):
         self.vista_reporte_gastos = Vista_reporte_gastos_viajero(self)
         self.vista_reporte_gastos.mostar_reporte_gastos(lista_gastos=self.logica.crearReporteGastosPorViajero(actividad.id), actividad=actividad)
 
-    def actualizar_viajeros(self, n_viajeros_en_actividad):
+    def actualizar_viajeros(self, actividad, n_viajeros_en_actividad, viajeros_a_eliminar):
         """
         Esta función añade un viajero a una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.viajeros_en_actividad = n_viajeros_en_actividad
+        for viajero in n_viajeros_en_actividad:
+            try:
+                self.logica.asociarViajeroAActividad(actividad.id, viajero.id)
+            except:
+                mensaje_error = QMessageBox()
+                mensaje_error.setIcon(QMessageBox.Critical)
+                mensaje_error.setWindowTitle(f"No se pudo guardar el viajero con id: {viajero.nombre} {viajero.apellido}")
+                mensaje_error.setStandardButtons(QMessageBox.Ok)
+                mensaje_error.exec_()
 
     def dar_viajeros(self):
         """
@@ -176,11 +184,25 @@ class App_CuentasClaras(QApplication):
         """
         return self.logica.listarViajeros()
 
-    def dar_viajeros_en_actividad(self):
+    def dar_viajeros_en_actividad(self, actividad):
         """
-        Esta función pasa los viajeros de una actividad (debe implementarse como una lista de diccionarios o str)
+        Esta función pasa los viajeros de una actividad
         """
-        return self.logica.viajeros_en_actividad
+        viajeros = self.logica.listarViajeros()
+        viajeros_en_actividad = self.logica.darListaViajerosActividad(actividad.id)
+        evaluar_igualdad = lambda viajero, actividadviajero: viajero.id == actividadviajero.viajero_id
+        lista_viajeros_en_actividad = []
+        for viajero in viajeros:
+            presente = False
+            for actividadViajero in viajeros_en_actividad:
+                if evaluar_igualdad(viajero, actividadViajero):
+                    lista_viajeros_en_actividad.append( (viajero, actividadViajero) )
+                    presente = True
+                    break
+            if not presente:
+                lista_viajeros_en_actividad.append( (viajero, None) )
+
+        return lista_viajeros_en_actividad
 
     def terminar_actividad(self, indice):
         """
