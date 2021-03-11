@@ -177,6 +177,15 @@ class App_CuentasClaras(QApplication):
                 mensaje_error.setWindowTitle(f"No se pudo guardar el viajero con id: {viajero.nombre} {viajero.apellido}")
                 mensaje_error.setStandardButtons(QMessageBox.Ok)
                 mensaje_error.exec_()
+        
+        for viajero in viajeros_a_eliminar:
+            try:
+                self.logica.eliminarActividadViajero(actividad.id, viajero.id)
+            except:
+                mensaje_error = QMessageBox()
+                mensaje_error.setIcon(QMessageBox.Critical)
+                mensaje_error.setWindowTitle(f"No se pudo eliminar el viajero: {viajero.nombre} {viajero.apellido}")
+                
 
     def dar_viajeros(self):
         """

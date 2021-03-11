@@ -90,6 +90,8 @@ class Dialogo_agregar_viajeros(QDialog):
                 if not existente:
                     self.nuevos_viajeros.append(m_viajero)    
             else:
+                if existente:
+                    self.eliminar_viajeros.append(m_viajero)
                 #TODO: Historia de usuario eliminar viajero de actividad
                 pass
         self.resultado = 1
