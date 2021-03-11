@@ -253,4 +253,15 @@ class ActividadTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             self.control_cuenta.eliminarActividadViajero(self.actividad1_id, self.viajero1_id)
 
+        #Actividad terminada
+        self.session = Session()
+        self.actividad1.terminada = True
+        self.session.add(self.actividad1)
+        self.session.commit()
+        
+        with self.assertRaises(Exception):
+            self.control_cuenta.eliminarActividadViajero(self.actividad1_id, self.viajero1_id)
+        
+        self.session.close()
+        
         
