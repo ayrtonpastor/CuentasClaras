@@ -162,7 +162,14 @@ class ControlCuenta():
         except IntegrityError as exception:
             raise exception
     
-    def asociarViajeroAActividad(self,actividad_id,viajero_id):
+    def asociarViajeroAActividad(self, actividad_id, viajero_id):
         if not actividad_id or not viajero_id:
             return None
-        raise Exception("No existe viajero o actividad")
+        try:
+            _actividad_viajero = ActividadViajero(
+                actividad_id=actividad_id, viajero_id=viajero_id)
+            session.add(_actividad_viajero)
+            session.commit()
+            return _actividad_viajero
+        except IntegrityError as exception:
+            raise exception
