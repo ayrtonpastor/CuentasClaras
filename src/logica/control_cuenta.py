@@ -161,3 +161,6 @@ class ControlCuenta():
             return _actividad
         except IntegrityError as exception:
             raise exception
+    
+    def asociarViajeroAActividad(self):
+        return None
