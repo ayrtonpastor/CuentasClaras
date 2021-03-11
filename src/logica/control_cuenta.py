@@ -192,6 +192,7 @@ class ControlCuenta():
             ).first()
             session.delete(_actividad_viajero)
             session.commit()
+            
         except IntegrityError as exception:
             session.rollback()
             raise exception
