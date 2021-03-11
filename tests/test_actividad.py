@@ -227,5 +227,13 @@ class ActividadTestCase(unittest.TestCase):
             self.assertRaises(self.control_cuenta.crearActividad("integracion"))
     
     def test_asociar_viajero_a_actividad(self):
-        self.assertEqual(None, self.control_cuenta.asociarViajeroAActividad())
-        
+        self.assertEqual(None, self.control_cuenta.asociarViajeroAActividad(None, None))
+
+        #El viajero no existe
+        self.session = Session()
+        self.session.delete(self.viajero4)
+        self.session.commit()
+        self.session.close()
+
+        with self.assertRaises(Exception):
+            self.assertEqual(None, self.control_cuenta.asociarViajeroAActividad(actividad_id=self.actividad1_id, viajero_id=self.viajero4_id))
