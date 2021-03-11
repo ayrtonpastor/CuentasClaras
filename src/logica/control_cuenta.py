@@ -160,6 +160,7 @@ class ControlCuenta():
             session.commit()
             return _actividad
         except IntegrityError as exception:
+            session.rollback()
             raise exception
     
     def asociarViajeroAActividad(self, actividad_id, viajero_id):
@@ -172,4 +173,5 @@ class ControlCuenta():
             session.commit()
             return _actividad_viajero
         except IntegrityError as exception:
+            session.rollback()
             raise exception
