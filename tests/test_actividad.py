@@ -245,3 +245,7 @@ class ActividadTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             self.assertEqual(None, self.control_cuenta.asociarViajeroAActividad(
                 actividad_id=self.actividad4_id, viajero_id=self.viajero4_id))
+    
+    def test_retirar_viajero_actividad(self):
+        self.asserEqual(None, self.control_cuenta.eliminarActividadViajero())
+        
