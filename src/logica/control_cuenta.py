@@ -170,6 +170,30 @@ class ControlCuenta():
         except IntegrityError as exception:
             session.rollback()
             raise exception
-    def eliminarActividadViajero(self):
-        return None
-    
+        
+    def eliminarActividadViajero(self, actividad_id, viajero_id):
+        #TODO: verificar constraints, si la actividad esta terminada, o si hay gastos
+        if not actividad_id or not viajero_id:
+            return None
+        try:
+            if session.query(Gasto).filter(Gasto.viajero_id == viajero_id, Gasto.actividad_id == actividad_id).count() > 0:
+                raise Exception("No se puede eliminar viajero con gastos")
+
+            _actividad = session.query(Actividad).filter(
+                Actividad.id == actividad_id).first()
+            if _actividad.terminada:
+                raise Exception(
+                    "No se puede eliminar viajero de una actividad terminada")
+
+            _actividad_viajero = session.query(ActividadViajero).filter(
+                ActividadViajero.actividad_id == actividad_id,
+                ActividadViajero.viajero_id == viajero_id
+            ).first()
+            session.delete(_actividad_viajero)
+            session.commit()
+        except IntegrityError as exception:
+            session.rollback()
+            raise exception
+
+    def darListaViajerosActividad(self, actividad_id):
+        return session.query(ActividadViajero).filter(ActividadViajero.actividad_id == actividad_id)
