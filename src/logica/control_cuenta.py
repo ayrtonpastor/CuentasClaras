@@ -176,12 +176,13 @@ class ControlCuenta():
         if not actividad_id or not viajero_id:
             return None
         try:
+                            
             if session.query(Gasto).filter(Gasto.viajero_id == viajero_id, Gasto.actividad_id == actividad_id).count() > 0:
                 raise Exception("No se puede eliminar viajero con gastos")
-
-            _actividad = session.query(Actividad).filter(
+            
+            m_actividad = session.query(Actividad).filter(
                 Actividad.id == actividad_id).first()
-            if _actividad.terminada:
+            if m_actividad.terminada:
                 raise Exception(
                     "No se puede eliminar viajero de una actividad terminada")
 
