@@ -224,7 +224,7 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(nombre_actividad, "integracion")
 
         with self.assertRaises(IntegrityError):
-            self.assertRaises(self.control_cuenta.crearActividad("integracion"))
+            self.control_cuenta.crearActividad("integracion")
     
     def test_asociar_viajero_a_actividad(self):
         self.assertEqual(
@@ -243,8 +243,8 @@ class ActividadTestCase(unittest.TestCase):
         self.session.commit()
         self.session.close()
         with self.assertRaises(Exception):
-            self.assertEqual(None, self.control_cuenta.asociarViajeroAActividad(
-                actividad_id=self.actividad4_id, viajero_id=self.viajero4_id))
+            self.control_cuenta.asociarViajeroAActividad(
+                actividad_id=self.actividad4_id, viajero_id=self.viajero4_id)
     
     def test_retirar_viajero_actividad(self):
         self.assertEqual(None, self.control_cuenta.eliminarActividadViajero(None, None))
@@ -262,6 +262,13 @@ class ActividadTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             self.control_cuenta.eliminarActividadViajero(self.actividad1_id, self.viajero1_id)
         
+        #Eliminacion efectiva
+        self.control_cuenta.eliminarActividadViajero(
+            self.actividad3_id, self.viajero1_id)
+        count = self.session.query(ActividadViajero).filter(ActividadViajero.actividad_id ==
+                                                            self.actividad3_id, ActividadViajero.viajero_id == self.viajero1_id).count()
+        self.assertEqual(0, count)
+
         self.session.close()
         
-        
+
