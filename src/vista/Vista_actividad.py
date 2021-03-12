@@ -58,8 +58,6 @@ class Vista_actividad(QWidget):
             QIcon("src/recursos/008-data-spreadsheet.png"))
         self.distribuidor_botones.addWidget(
             self.btn_reporte_gastos_viajeros, 0, 1, Qt.AlignCenter)
-        self.btn_reporte_gastos_viajeros.clicked.connect(
-            self.mostrar_reporte_gastos_por_viajero)
 
         self.btn_reporte_compensacion = QPushButton("Compensación", self)
         self.btn_reporte_compensacion.setFixedSize(200, 40)
@@ -118,6 +116,8 @@ class Vista_actividad(QWidget):
         # TODO: sirve para actualizar los botones con la actividad adecuada
         self.btn_reporte_compensacion.clicked.connect(
             partial(self.mostrar_reporte_comensacion, actividad))
+        self.btn_reporte_gastos_viajeros.clicked.connect(
+            partial(self.mostrar_reporte_gastos_por_viajero, actividad))
 
     def mostrar_gastos_por_actividad(self, actividad, gastos):
         """
@@ -229,12 +229,12 @@ class Vista_actividad(QWidget):
         self.hide()
         self.interfaz.mostrar_reporte_compensacion(actividad)
 
-    def mostrar_reporte_gastos_por_viajero(self):
+    def mostrar_reporte_gastos_por_viajero(self, actividad):
         """
         Esta función informa a la interfaz para mostrar la ventana de los gastos consolidados
         """
         self.hide()
-        self.interfaz.mostrar_reporte_gastos_viajero()
+        self.interfaz.mostrar_reporte_gastos_viajero(actividad)
 
     def crear_gasto(self):
         """

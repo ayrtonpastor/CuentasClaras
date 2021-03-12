@@ -69,15 +69,20 @@ class Vista_reporte_gastos_viajero(QWidget):
         self.btn_volver.setToolTip("Añadir Actividad")
         self.btn_volver.setIcon(QIcon("src/recursos/007-back-button.png"))
         self.btn_volver.setIconSize(QSize(120, 120))
-        self.btn_volver.clicked.connect(self.volver)
         self.distribuidor_base.addWidget(self.btn_volver)
         self.distribuidor_base.setAlignment(self.btn_volver, Qt.AlignCenter)
 
+    def actualizar_gui_con_actividad(self, actividad):
+        """
+        Esta funcion actualiza los botones para que se linkeen con la actividad correspondiente
+        """
+        self.btn_volver.clicked.connect(partial(self.volver,actividad))
 
-    def mostar_reporte_gastos(self, lista_gastos):
+    def mostar_reporte_gastos(self, lista_gastos, actividad):
         """
         Esta función puebla el reporte de gastos con la información en la lista
         """
+        self.actualizar_gui_con_actividad(actividad)
 
         #Por cada iteración, llenamos con el nombre del viajero y sus gastos consolidados para la actividad
         numero_fila = 1
@@ -91,7 +96,7 @@ class Vista_reporte_gastos_viajero(QWidget):
             etiqueta_concepto.setWordWrap(True)
             self.distribuidor_tabla_reporte.addWidget(etiqueta_concepto, numero_fila, 1, Qt.AlignLeft)
 
-            etiqueta_total = QLabel("${:,.2f}".format(gasto["Valor"]))
+            etiqueta_total = QLabel("$"+gasto["Valor"])
             etiqueta_total.setWordWrap(True)
             self.distribuidor_tabla_reporte.addWidget(etiqueta_total, numero_fila, 2, Qt.AlignLeft)
 
@@ -100,9 +105,9 @@ class Vista_reporte_gastos_viajero(QWidget):
         #Elemento para ajustar la forma de la tabla (y evitar que queden muy espaciados)
         self.distribuidor_tabla_reporte.layout().setRowStretch(numero_fila+1, 1)
 
-    def volver(self):
+    def volver(self, actividad):
         """
         Esta función permite volver a la ventana de la actividad
         """   
         self.hide()
-        self.interfaz.mostrar_actividad()
+        self.interfaz.mostrar_actividad(actividad)

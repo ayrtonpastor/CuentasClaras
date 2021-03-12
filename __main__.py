@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 from PyQt5.QtWidgets import QApplication
 from src.vista.Interfaz_CuentasClaras import App_CuentasClaras
@@ -17,4 +18,3 @@ if __name__ == '__main__':
         sys.exit(app.exec_())
     finally:
         factory_mockup_data.tearDown()
-        
