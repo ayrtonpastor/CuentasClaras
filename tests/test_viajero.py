@@ -13,10 +13,18 @@ class ViajeroTestCase(unittest.TestCase):
         self.session = Session()
         """ Generación de datos aleatorios """
         self.data_factory = Faker()
-        
-        self.viajero1 = Viajero(nombre="Dario", apellido="Correal")
-        self.viajero2 = Viajero(nombre="Ayrton", apellido="Pastor")
-        self.viajero3 = Viajero(nombre="Pedro", apellido="Lizarazo")
+
+        nombre_viajero1 = self.data_factory.name()
+        nombre_viajero2 = self.data_factory.name()
+        nombre_viajero3 = self.data_factory.name()
+
+        apellido_viajero1 = self.data_factory.name()
+        apellido_viajero2 = self.data_factory.name()
+        apellido_viajero3 = self.data_factory.name()
+
+        self.viajero1 = Viajero(nombre=nombre_viajero1, apellido=apellido_viajero1)
+        self.viajero2 = Viajero(nombre=nombre_viajero2, apellido=apellido_viajero2)
+        self.viajero3 = Viajero(nombre=nombre_viajero3, apellido=apellido_viajero3)
 
         self.session.add_all([self.viajero1, self.viajero2, self.viajero3])
         self.session.flush()
@@ -24,8 +32,12 @@ class ViajeroTestCase(unittest.TestCase):
         self.session.commit()
 
         self.viajero1_id = self.viajero1.id
+        self.viajero1_nombre_original = self.viajero1.nombre
         self.viajero2_id = self.viajero2.id
+        self.viajero2_nombre_original = self.viajero2.nombre
         self.viajero3_id = self.viajero3.id
+        self.viajero3_nombre_original = self.viajero3.nombre
+        self.viajero3_apellido_original = self.viajero3.apellido
 
         self.session.close()
 
@@ -69,10 +81,10 @@ class ViajeroTestCase(unittest.TestCase):
     def test_editar_viajero(self):
         nuevo_nombre1 = ""
         nuevo_apellido1 = None
-        nuevo_nombre2 = "Pedro"
-        nuevo_apellido2 = "Lizarazo"
-        nuevo_nombre3 = "Juan"
-        nuevo_apellido3 = "Flores"
+        nuevo_nombre2 = self.viajero3_nombre_original
+        nuevo_apellido2 = self.viajero3_apellido_original
+        nuevo_nombre3 = self.data_factory.name()
+        nuevo_apellido3 = self.data_factory.name()
 
         self.control_cuenta.editarViajero(self.viajero1_id, nuevo_nombre1, nuevo_apellido1)
         self.control_cuenta.editarViajero(self.viajero2_id, nuevo_nombre2, nuevo_apellido2)
@@ -83,7 +95,7 @@ class ViajeroTestCase(unittest.TestCase):
         viajero2 = self.session.query(Viajero).filter(Viajero.id == self.viajero2_id).first()
         viajero3 = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).first()
 
-        self.assertEqual("Dario", viajero1.nombre)
-        self.assertEqual("Ayrton", viajero2.nombre)
-        self.assertEqual("Juan", viajero3.nombre)
+        self.assertEqual(self.viajero1_nombre_original, viajero1.nombre)
+        self.assertEqual(self.viajero2_nombre_original, viajero2.nombre)
+        self.assertEqual([nuevo_nombre3, nuevo_apellido3], [viajero3.nombre, viajero3.apellido])
         self.assertEqual(False, editar_viajero_inexistente)
