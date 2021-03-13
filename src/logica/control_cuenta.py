@@ -243,12 +243,16 @@ class ControlCuenta():
         if not actividad_id:
             return None
         
-        if not nombre:
-            raise ValueError("El nombre no puede ser vacio")
-
         try:
+            if not nombre:
+                raise ValueError("El nombre no puede ser vacio")
+
             m_actividad = session.query(Actividad).filter(
                 Actividad.id == actividad_id).first()
+            
+            if m_actividad.terminada:
+                raise ValueError("La actividad está terminada y no se puede modificar")
+
             m_actividad.nombre = nombre
             session.add(m_actividad)
             session.commit()
