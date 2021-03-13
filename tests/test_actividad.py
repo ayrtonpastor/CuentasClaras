@@ -310,5 +310,10 @@ class ActividadTestCase(unittest.TestCase):
     
     def test_editar_actividad(self):
         self.assertEqual(
-            None, self.control_cuenta.editarActividad())
+            None, self.control_cuenta.editarActividad(None,None))
+        
+        #Nombre vacio
+        with self.assertRaises(Exception):
+            self.control_cuenta.editarActividad(
+                self.actividad1_id, "")
 
