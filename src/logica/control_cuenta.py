@@ -140,6 +140,9 @@ class ControlCuenta():
                 try:
                     concepto = concepto.strip()
                     fecha = date(anho, mes, dia)
+
+                    if not isinstance(monto, (int, float)) or monto < 0:
+                        return False
                 except AttributeError as exception:
                     return False
                 except TypeError as exception:
