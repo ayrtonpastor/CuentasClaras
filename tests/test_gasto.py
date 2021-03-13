@@ -142,6 +142,10 @@ class ActividadTestCase(unittest.TestCase):
             self.actividad1_id, self.viajero1_id, None, 2020, 12, 12, 1234.43)
         crear_gasto_monto_negativo = self.control_cuenta.crearGastoParaActividad(
             self.actividad1_id, self.viajero1_id, "Concepto gasto 6", 2020, 12, 12, -4444.43)
+        crear_gasto_concepto_en_blanco = self.control_cuenta.crearGastoParaActividad(
+            self.actividad1_id, self.viajero1_id, "", 2020, 12, 12, 4444.43)
+        crear_gasto_concepto_repetido = self.control_cuenta.crearGastoParaActividad(
+            self.actividad1_id, self.viajero1_id, self.gasto1_concepto, 2020, 12, 4, 1231.22)
 
         self.assertEqual(False, crear_gasto_sin_actividad)
         self.assertEqual(False, crear_gasto_sin_viajero)
@@ -149,3 +153,5 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(False, crear_gasto_fecha_erronea)
         self.assertEqual(False, crear_gasto_concepto_nulo)
         self.assertEqual(False, crear_gasto_monto_negativo)
+        self.assertEqual(False, crear_gasto_concepto_en_blanco)
+        self.assertEqual(False, crear_gasto_concepto_repetido)
