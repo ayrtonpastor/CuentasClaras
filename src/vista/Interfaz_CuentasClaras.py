@@ -62,12 +62,20 @@ class App_CuentasClaras(QApplication):
         self.logica.actividades[indice_actividad] = nombre
         self.vista_lista_actividades.mostrar_actividades(self.logica.actividades)
 
-    def eliminar_actividad(self, indice_actividad):
+    def eliminar_actividad(self, actividad_id):
         """
         Esta función elimina una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.actividades.pop(indice_actividad)
-        self.vista_lista_actividades.mostrar_actividades(self.logica.actividades)
+        try:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al eliminar actividad")
+            self.logica.eliminarActividad(actividad_id)
+            self.vista_lista_actividades.mostrar_actividades(self.logica.listarActividades())
+        except Exception as e:
+            mensaje_error.setText(str(e))
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
 
 
     def mostrar_viajeros(self):
