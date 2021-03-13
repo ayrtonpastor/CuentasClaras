@@ -239,5 +239,9 @@ class ControlCuenta():
             session.rollback()
             raise exception
     
-    def editarActividad(self):
-        return None
+    def editarActividad(self, actividad_id, nombre):
+        if not actividad_id:
+            return None
+        
+        if not nombre:
+            raise ValueError("El nombre no puede ser vacio")
