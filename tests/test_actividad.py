@@ -276,3 +276,7 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(0, count)
 
         self.session.close()
+
+    def test_eliminar_actividad(self):
+        self.assertEqual(
+            None, self.control_cuenta.eliminarActividad())
