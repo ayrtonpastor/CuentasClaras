@@ -144,9 +144,15 @@ class ControlCuenta():
                     if not isinstance(monto, (int, float)) or monto < 0:
                         return False
                     else:
+                        monto = round(monto, 2)
                         gastos = session.query(Gasto).filter(Gasto.concepto == concepto, Gasto.actividad_id == actividad_id).all()
                         if len(gastos) > 0 or concepto == "":
                             return False
+                        else:
+                            gasto = Gasto(concepto=concepto, monto=monto, fecha=fecha, viajero_id=viajero_id, actividad_id=actividad_id)
+                            session.add(gasto)
+                            session.commit()
+                            return True
                 except AttributeError as exception:
                     return False
                 except TypeError as exception:

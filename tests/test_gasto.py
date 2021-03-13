@@ -160,4 +160,5 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(False, crear_gasto_concepto_repetido)
         gasto_creado_con_exito = self.session.query(Gasto).filter(Gasto.actividad_id == self.actividad1_id,
                                                                   Gasto.concepto == self.gasto3_concepto).first()
-        self.assertEqual([self.gasto3_concepto, 5343.11], [gasto_creado_con_exito.concepto, gasto_creado_con_exito.monto])
+        self.assertEqual([self.gasto3_concepto, "{:.2f}".format(5343.11)],
+                         [gasto_creado_con_exito.concepto, "{:.2f}".format(gasto_creado_con_exito.monto)])
