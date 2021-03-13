@@ -178,7 +178,7 @@ class Vista_lista_actividades(QWidget):
                 btn_editar.setFixedSize(40, 40)
                 btn_editar.setIcon(QIcon("src/recursos/004-edit-button.png"))
                 btn_editar.clicked.connect(
-                    partial(self.mostrar_dialogo_editar_actividad, numero_fila - 1))
+                    partial(self.mostrar_dialogo_editar_actividad, my_actividad))
                 self.distribuidor_tabla_actividades.addWidget(
                     btn_editar, numero_fila, 4, Qt.AlignCenter)
 
@@ -225,15 +225,15 @@ class Vista_lista_actividades(QWidget):
         if dialogo.resultado == 1:
             self.interfaz.insertar_actividad(dialogo.texto_nombre.text())
 
-    def mostrar_dialogo_editar_actividad(self, indice_actividad):
+    def mostrar_dialogo_editar_actividad(self, actividad):
         """
         Esta función ejecuta el diálogo para editar una actividad
         """
-        dialogo = Dialogo_crear_actividad(self.actividades[indice_actividad])
+        dialogo = Dialogo_crear_actividad(actividad)
         dialogo.exec_()
         if dialogo.resultado == 1:
             self.interfaz.editar_actividad(
-                indice_actividad, dialogo.texto_nombre.text())
+                actividad.id , dialogo.texto_nombre.text())
 
     def mostrar_dialogo_insertar_viajeros(self, actividad):
         """

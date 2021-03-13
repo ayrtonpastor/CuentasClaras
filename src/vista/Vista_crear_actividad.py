@@ -56,7 +56,7 @@ class Dialogo_crear_actividad(QDialog):
         #Si el diálogo se usa para editar, se debe mostrar el nombre de la actividad a editar
         
         if (actividad!=None):
-            self.texto_nombre.setText(actividad)
+            self.texto_nombre.setText(actividad.nombre)
 
 
     def guardar(self):
