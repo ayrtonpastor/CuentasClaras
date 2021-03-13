@@ -150,14 +150,14 @@ class ActividadTestCase(unittest.TestCase):
         self.control_cuenta.crearGastoParaActividad(
             self.actividad1_id, self.viajero1_id, self.gasto3_concepto, 2020, 12, 4, 5343.11)
 
-        self.assertEqual(False, crear_gasto_sin_actividad)
-        self.assertEqual(False, crear_gasto_sin_viajero)
-        self.assertEqual(False, crear_gasto_de_viajero_fuera_de_actividad)
-        self.assertEqual(False, crear_gasto_fecha_erronea)
-        self.assertEqual(False, crear_gasto_concepto_nulo)
-        self.assertEqual(False, crear_gasto_monto_negativo)
-        self.assertEqual(False, crear_gasto_concepto_en_blanco)
-        self.assertEqual(False, crear_gasto_concepto_repetido)
+        self.assertEqual(False, crear_gasto_sin_actividad[0])
+        self.assertEqual(False, crear_gasto_sin_viajero[0])
+        self.assertEqual(False, crear_gasto_de_viajero_fuera_de_actividad[0])
+        self.assertEqual(False, crear_gasto_fecha_erronea[0])
+        self.assertEqual(False, crear_gasto_concepto_nulo[0])
+        self.assertEqual(False, crear_gasto_monto_negativo[0])
+        self.assertEqual(False, crear_gasto_concepto_en_blanco[0])
+        self.assertEqual(False, crear_gasto_concepto_repetido[0])
         gasto_creado_con_exito = self.session.query(Gasto).filter(Gasto.actividad_id == self.actividad1_id,
                                                                   Gasto.concepto == self.gasto3_concepto).first()
         self.assertEqual([self.gasto3_concepto, "{:.2f}".format(5343.11)],

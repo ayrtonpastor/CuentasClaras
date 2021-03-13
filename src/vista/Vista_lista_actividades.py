@@ -219,7 +219,7 @@ class Vista_lista_actividades(QWidget):
         Esta función ejecuta el diálogo para agregar un viajero
         """     
         dialogo=Dialogo_agregar_viajeros()
-        dialogo.mostrar_viajeros(self.interfaz.dar_viajeros_en_actividad(actividad))    
+        dialogo.mostrar_viajeros(self.interfaz.dar_viajeros_y_relacion_actividad(actividad))
         dialogo.exec_()
         if dialogo.resultado == 1:
             self.interfaz.actualizar_viajeros(actividad, dialogo.nuevos_viajeros, dialogo.eliminar_viajeros)

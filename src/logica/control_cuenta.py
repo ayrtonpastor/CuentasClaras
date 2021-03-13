@@ -125,38 +125,34 @@ class ControlCuenta():
 
     def crearGastoParaActividad(self, actividad_id, viajero_id, concepto, anho, mes, dia, monto):
         if actividad_id is None or viajero_id is None:
-            return False
+            return [False, 'El viajero o la actividad no están definidos.']
         else:
             actividad = session.query(Actividad).filter_by(id=actividad_id).first()
             viajero = session.query(Viajero).filter_by(id=viajero_id).first()
+            actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=actividad_id, viajero_id=viajero_id).first()
 
-            if actividad is None or viajero is None:
-                return False
+            if actividad is None or viajero is None or actividad_viajero is None:
+                return [False, 'No se encontró el viajero o la actividad.']
             else:
-                actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=actividad_id,
-                                                                              viajero_id=viajero_id).first()
-                if not actividad_viajero:
-                    return False
-                try:
+                if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(dia, int) and isinstance(monto, (int, float)):
                     concepto = concepto.strip()
-                    fecha = date(anho, mes, dia)
 
-                    if not isinstance(monto, (int, float)) or monto < 0:
-                        return False
-                    else:
-                        monto = round(monto, 2)
+                    if concepto != "" and anho > 0 and mes > 0 and dia > 0 and monto > 0:
                         gastos = session.query(Gasto).filter(Gasto.concepto == concepto, Gasto.actividad_id == actividad_id).all()
-                        if len(gastos) > 0 or concepto == "":
-                            return False
-                        else:
+
+                        if len(gastos) == 0:
+                            fecha = date(anho, mes, dia)
+                            monto = round(float(monto), 2)
                             gasto = Gasto(concepto=concepto, monto=monto, fecha=fecha, viajero_id=viajero_id, actividad_id=actividad_id)
                             session.add(gasto)
                             session.commit()
-                            return True
-                except AttributeError as exception:
-                    return False
-                except TypeError as exception:
-                    return False
+                            return [True, 'Se añadió con éxito el gasto.']
+                        else:
+                            return [False, 'El concepto está siendo utilizado por un gasto de esta actividad.']
+                    else:
+                        return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+                else:
+                    return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
 
     def listarViajeros(self):
         return session.query(Viajero).all()
