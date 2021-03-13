@@ -245,3 +245,6 @@ class ControlCuenta():
         
         if not nombre:
             raise ValueError("El nombre no puede ser vacio")
+
+        if session.query(Actividad).filter(Actividad.nombre == nombre).count() > 0:
+            raise IntegrityError()
