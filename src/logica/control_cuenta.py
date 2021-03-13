@@ -218,14 +218,22 @@ class ControlCuenta():
     
     def eliminarActividad(self, actividad_id):
         if not actividad_id:
-        return None
+            return None
 
-        m_actividad = session.query(Actividad).filter(Actividad.id == actividad_id).first()
+        try:
+            m_actividad = session.query(Actividad).filter(Actividad.id == actividad_id).first()
 
-        if len(m_actividad.gastos) > 0:
-            raise Exception(
-                    "No se puede eliminar una actividad que contiene gastos")
-
-        if m_actividad.terminada:
+            if len(m_actividad.gastos) > 0:
                 raise Exception(
-                    "No se puede eliminar una actividad que está terminada")
+                        "No se puede eliminar una actividad que contiene gastos")
+            
+            if m_actividad.terminada:
+                    raise Exception(
+                        "No se puede eliminar una actividad que está terminada")
+            
+            session.delete(m_actividad)
+            session.commit()
+            
+        except IntegrityError as exception:
+            session.rollback()
+            raise exception
