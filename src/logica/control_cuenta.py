@@ -246,9 +246,6 @@ class ControlCuenta():
         if not nombre:
             raise ValueError("El nombre no puede ser vacio")
 
-        if session.query(Actividad).filter(Actividad.nombre == nombre).count() > 0:
-            raise IntegrityError()
-        
         try:
             m_actividad = session.query(Actividad).filter(
                 Actividad.id == actividad_id).first()
@@ -257,4 +254,4 @@ class ControlCuenta():
             session.commit()
         except IntegrityError as exception:
             session.rollback()
-            raise Exception
+            raise exception
