@@ -322,4 +322,13 @@ class ActividadTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             self.control_cuenta.editarActividad(
                 self.actividad4_id, nombre_repetido)
-
+        
+        #Cambio nombre a uno valido
+        nombre_valido = "Valid name not created before"
+        count = self.session.query(Actividad).filter(
+            Actividad.nombre == nombre_valido).count()
+        self.assertEqual(0, count)
+        self.control_cuenta.editarActividad(self.actividad4_id, nombre_valido)
+        count = self.session.query(Actividad).filter(
+            Actividad.nombre == nombre_valido).count()
+        self.assertEqual(1, count)
