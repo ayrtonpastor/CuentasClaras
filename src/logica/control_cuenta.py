@@ -225,3 +225,7 @@ class ControlCuenta():
         if len(m_actividad.gastos) > 0:
             raise Exception(
                     "No se puede eliminar una actividad que contiene gastos")
+
+        if m_actividad.terminada:
+                raise Exception(
+                    "No se puede eliminar una actividad que está terminada")
