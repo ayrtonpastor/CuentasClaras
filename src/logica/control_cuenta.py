@@ -122,6 +122,9 @@ class ControlCuenta():
         actividad = session.query(Actividad).filter_by(id=actividad_id).first()
         return actividad.gastos
 
+    def crearGastoParaActividad(self, actividad_id, viajero_id, concepto, anho, mes, dia, monto):
+        pass
+
     def listarViajeros(self):
         return session.query(Viajero).all()
 
