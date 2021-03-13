@@ -276,3 +276,34 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(0, count)
 
         self.session.close()
+
+    def test_eliminar_actividad(self):
+        self.assertEqual(
+            None, self.control_cuenta.eliminarActividad(None))
+
+        # Actividad con gastos
+        with self.assertRaises(Exception):
+            self.control_cuenta.eliminarActividad(
+                self.actividad1_id)
+
+        # Actividad terminada (actividad2)
+        self.session = Session()
+        self.actividad4.terminada = True
+        self.session.add(self.actividad4)
+        self.session.commit()
+        with self.assertRaises(Exception):
+            self.control_cuenta.eliminarActividad(
+                self.actividad4_id)
+
+        self.actividad4.terminada = False
+        self.session.add(self.actividad4)
+        self.session.commit()
+
+        self.session.close()
+
+        # Actividad sin gastos ni terminada
+        self.control_cuenta.eliminarActividad(
+            self.actividad4_id)
+        count = self.session.query(Actividad).filter(Actividad.id ==
+                                                     self.actividad4_id).count()
+        self.assertEqual(0, count)
