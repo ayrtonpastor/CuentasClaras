@@ -1,3 +1,4 @@
+from datetime import date
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
@@ -135,6 +136,13 @@ class ControlCuenta():
                 actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=actividad_id,
                                                                               viajero_id=viajero_id).first()
                 if not actividad_viajero:
+                    return False
+                try:
+                    concepto = concepto.strip()
+                    fecha = date(anho, mes, dia)
+                except AttributeError as exception:
+                    return False
+                except TypeError as exception:
                     return False
 
     def listarViajeros(self):
