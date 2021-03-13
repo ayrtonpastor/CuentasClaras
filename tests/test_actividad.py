@@ -307,3 +307,8 @@ class ActividadTestCase(unittest.TestCase):
         count = self.session.query(Actividad).filter(Actividad.id ==
                                                      self.actividad4_id).count()
         self.assertEqual(0, count)
+    
+    def test_editar_actividad(self):
+        self.assertEqual(
+            None, self.control_cuenta.editarActividad())
+
