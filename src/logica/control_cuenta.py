@@ -238,3 +238,6 @@ class ControlCuenta():
         except IntegrityError as exception:
             session.rollback()
             raise exception
+    
+    def editarActividad(self):
+        return None
