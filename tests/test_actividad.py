@@ -279,4 +279,9 @@ class ActividadTestCase(unittest.TestCase):
 
     def test_eliminar_actividad(self):
         self.assertEqual(
-            None, self.control_cuenta.eliminarActividad())
+            None, self.control_cuenta.eliminarActividad(None))
+
+        # Actividad con gastos
+        with self.assertRaises(Exception):
+            self.control_cuenta.eliminarActividad(
+                self.actividad1_id)
