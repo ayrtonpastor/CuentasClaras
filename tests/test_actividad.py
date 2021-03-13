@@ -301,7 +301,7 @@ class ActividadTestCase(unittest.TestCase):
 
         self.session.close()
 
-        #Actividad sin gastos ni terminada
+        # Actividad sin gastos ni terminada
         self.control_cuenta.eliminarActividad(
             self.actividad4_id)
         count = self.session.query(Actividad).filter(Actividad.id ==
