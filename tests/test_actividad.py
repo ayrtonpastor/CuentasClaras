@@ -317,6 +317,31 @@ class ActividadTestCase(unittest.TestCase):
             self.control_cuenta.editarActividad(
                 self.actividad1_id, "")
         
+        #Cambio cuando actividad está terminada
+        nombre_valido = "Valid name not created before"
+        count = self.session.query(Actividad).filter(
+            Actividad.nombre == nombre_valido).count()
+        self.assertEqual(0, count)
+
+        self.session = Session()
+        self.actividad4.terminada = True
+        self.session.add(self.actividad4)
+        self.session.commit()
+
+        with self.assertRaises(Exception):
+            self.control_cuenta.editarActividad(
+                self.actividad4_id, nombre_valido)
+
+        _actividad = self.session.query(Actividad).filter(
+            Actividad.id == self.actividad4_id).first()
+        self.assertNotEqual(nombre_valido, _actividad.nombre)
+
+        self.actividad4.terminada = False
+        self.session.add(self.actividad4)
+        self.session.commit()
+        
+        self.session.close()
+        
         #Cambio nombre actividad 4 a un nombre repetido de actividad 1
         nombre_repetido = self.actividad1.nombre
         with self.assertRaises(Exception):
