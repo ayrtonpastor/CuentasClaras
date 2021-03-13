@@ -6,6 +6,7 @@ from .Vista_actividad import Vista_actividad
 from .Vista_reporte_compensacion import Vista_reporte_compensacion
 from .Vista_reporte_gastos import Vista_reporte_gastos_viajero
 
+
 class App_CuentasClaras(QApplication):
     """
     Clase principal de la interfaz que coordina las diferentes vistas/ventanas de la aplicación
@@ -20,14 +21,13 @@ class App_CuentasClaras(QApplication):
         self.logica = logica
         self.mostrar_vista_lista_actividades()
 
-
     def mostrar_vista_lista_actividades(self):
         """
         Esta función inicializa la ventana de la lista de actividades
         """
         self.vista_lista_actividades = Vista_lista_actividades(self)
-        self.vista_lista_actividades.mostrar_actividades(self.logica.listarActividades())
-
+        self.vista_lista_actividades.mostrar_actividades(
+            self.logica.listarActividades())
 
     def insertar_actividad(self, nombre):
         """
@@ -42,34 +42,55 @@ class App_CuentasClaras(QApplication):
                 raise ValueError("El nombre no puede ser vacio")
 
             self.logica.crearActividad(nombre)
-            self.vista_lista_actividades.mostrar_actividades(self.logica.listarActividades())
+            self.vista_lista_actividades.mostrar_actividades(
+                self.logica.listarActividades())
         except ValueError as e:
-            mensaje_error.setText("El nombre de la actividad no puede ser vacio.")
+            mensaje_error.setText(
+                "El nombre de la actividad no puede ser vacio.")
             mensaje_error.setStandardButtons(QMessageBox.Ok)
             mensaje_error.exec_()
         except Exception as e:
             mensaje_error.setText("El nombre de la actividad está repetido.")
             mensaje_error.setStandardButtons(QMessageBox.Ok)
             mensaje_error.exec_()
-            
 
-            
-
-
-    def editar_actividad(self, indice_actividad, nombre):
+    def editar_actividad(self, actividad_id, nombre):
         """
         Esta función editar una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.actividades[indice_actividad] = nombre
-        self.vista_lista_actividades.mostrar_actividades(self.logica.actividades)
+        try:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al eliminar actividad")
+            self.logica.editarActividad(actividad_id, nombre)
+        except ValueError as e:
+            mensaje_error.setText(str(e))
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+        except Exception as e:
+            mensaje_error.setText(
+                "El nombre ya existe en otra actividad, no puede repetirse")
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+        finally:
+            self.vista_lista_actividades.mostrar_actividades(
+                self.logica.listarActividades())
 
-    def eliminar_actividad(self, indice_actividad):
+    def eliminar_actividad(self, actividad_id):
         """
         Esta función elimina una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.actividades.pop(indice_actividad)
-        self.vista_lista_actividades.mostrar_actividades(self.logica.actividades)
-
+        try:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al eliminar actividad")
+            self.logica.eliminarActividad(actividad_id)
+            self.vista_lista_actividades.mostrar_actividades(
+                self.logica.listarActividades())
+        except Exception as e:
+            mensaje_error.setText(str(e))
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
 
     def mostrar_viajeros(self):
         """
@@ -88,7 +109,8 @@ class App_CuentasClaras(QApplication):
             mensaje_error.setIcon(QMessageBox.Critical)
             mensaje_error.setWindowTitle("Error al guardar los cambios")
             if nombre is None or nombre == "" or apellido is None or apellido == "":
-                mensaje_error.setText("El nombre y el apellido no deben estar en blanco.")
+                mensaje_error.setText(
+                    "El nombre y el apellido no deben estar en blanco.")
             else:
                 mensaje_error.setText("Ya existe un viajero con estos datos.")
             mensaje_error.setStandardButtons(QMessageBox.Ok)
@@ -100,13 +122,15 @@ class App_CuentasClaras(QApplication):
         """
         Esta función edita un viajero en la lógica (debe modificarse cuando se construya la lógica)
         """
-        editar_viajero = self.logica.editarViajero(viajero.id, nombre, apellido)
+        editar_viajero = self.logica.editarViajero(
+            viajero.id, nombre, apellido)
         if not editar_viajero:
             mensaje_error = QMessageBox()
             mensaje_error.setIcon(QMessageBox.Critical)
             mensaje_error.setWindowTitle("Error al guardar los cambios")
             if nombre is None or nombre == "" or apellido is None or apellido == "":
-                mensaje_error.setText("El nombre y el apellido no deben estar en blanco.")
+                mensaje_error.setText(
+                    "El nombre y el apellido no deben estar en blanco.")
             else:
                 mensaje_error.setText("Ya existe un viajero con estos datos.")
             mensaje_error.setStandardButtons(QMessageBox.Ok)
@@ -121,14 +145,15 @@ class App_CuentasClaras(QApplication):
         self.logica.viajeros.pop(indice_viajero)
         self.vista_lista_viajeros.mostrar_viajeros(self.logica.viajeros)
 
-    def mostrar_actividad(self, actividad = None):
+    def mostrar_actividad(self, actividad=None):
         """
         Esta función muestra la ventana detallada de una actividad
         """
         if actividad == None:
             raise Exception("Actividad nula")
         self.vista_actividad = Vista_actividad(self)
-        self.vista_actividad.mostrar_gastos_por_actividad(actividad, self.logica.listarGastos(actividad.id))
+        self.vista_actividad.mostrar_gastos_por_actividad(
+            actividad, self.logica.listarGastos(actividad.id))
 
     def insertar_gasto(self, actividad, viajero_id, concepto, fecha, valor):
         """
@@ -195,10 +220,11 @@ class App_CuentasClaras(QApplication):
             except:
                 mensaje_error = QMessageBox()
                 mensaje_error.setIcon(QMessageBox.Critical)
-                mensaje_error.setWindowTitle(f"No se pudo guardar el viajero con id: {viajero.nombre} {viajero.apellido}")
+                mensaje_error.setWindowTitle(
+                    f"No se pudo guardar el viajero con id: {viajero.nombre} {viajero.apellido}")
                 mensaje_error.setStandardButtons(QMessageBox.Ok)
                 mensaje_error.exec_()
-        
+
         for viajero in viajeros_a_eliminar:
             try:
                 self.logica.eliminarActividadViajero(actividad.id, viajero.id)
@@ -206,10 +232,10 @@ class App_CuentasClaras(QApplication):
                 mensaje_error = QMessageBox()
                 mensaje_error.setIcon(QMessageBox.Critical)
                 mensaje_error.setWindowTitle(f"No se pudo eliminar el viajero")
-                mensaje_error.setText(f"{e} {viajero.nombre} {viajero.apellido}")
+                mensaje_error.setText(
+                    f"{e} {viajero.nombre} {viajero.apellido}")
                 mensaje_error.setStandardButtons(QMessageBox.Ok)
                 mensaje_error.exec_()
-                
 
     def dar_viajeros(self):
         """

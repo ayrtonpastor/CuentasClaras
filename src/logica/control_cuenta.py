@@ -247,3 +247,47 @@ class ControlCuenta():
 
     def darListaViajerosActividad(self, actividad_id):
         return session.query(ActividadViajero).filter(ActividadViajero.actividad_id == actividad_id)
+
+    def eliminarActividad(self, actividad_id):
+        if not actividad_id:
+            return None
+
+        try:
+            m_actividad = session.query(Actividad).filter(
+                Actividad.id == actividad_id).first()
+
+            if len(m_actividad.gastos) > 0:
+                raise Exception(
+                    "No se puede eliminar una actividad que contiene gastos")
+
+            if m_actividad.terminada:
+                raise Exception(
+                    "No se puede eliminar una actividad que está terminada")
+
+            session.delete(m_actividad)
+            session.commit()
+
+        except IntegrityError as exception:
+            session.rollback()
+            raise exception
+    
+    def editarActividad(self, actividad_id, nombre):
+        if not actividad_id:
+            return None
+        
+        try:
+            if not nombre:
+                raise ValueError("El nombre no puede ser vacio")
+
+            m_actividad = session.query(Actividad).filter(
+                Actividad.id == actividad_id).first()
+            
+            if m_actividad.terminada:
+                raise ValueError("La actividad está terminada y no se puede modificar")
+
+            m_actividad.nombre = nombre
+            session.add(m_actividad)
+            session.commit()
+        except IntegrityError as exception:
+            session.rollback()
+            raise exception
