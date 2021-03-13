@@ -36,11 +36,11 @@ jobs:
         pip install -r requirements.txt
     - name: Correr pruebas
       id: correr-pruebas
-      run: python -m unittest -v tests/test_persona.py
+      run: python -m unittest discover -s tests
     - name: Cálculo de cubrimiento
       id: cubrimiento
       run: |
-          coverage run -m unittest tests/test_persona.py
+          coverage run -m unittest discover -s tests
           coverage report -m
   automerge:
     name: Automerge
