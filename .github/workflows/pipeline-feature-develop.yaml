@@ -1,4 +1,4 @@
-name: Automerge
+name: Develop-pipeline
 on:
   pull_request:
     types:
