@@ -86,6 +86,7 @@ class ActividadTestCase(unittest.TestCase):
         self.session.commit()
 
         self.gasto1_concepto = self.gasto1.concepto
+        self.gasto3_concepto = self.gasto3.concepto
         self.actividad1_id = self.actividad1.id
         self.actividad2_id = self.actividad2.id
         self.actividad3_id = self.actividad3.id
@@ -146,6 +147,8 @@ class ActividadTestCase(unittest.TestCase):
             self.actividad1_id, self.viajero1_id, "", 2020, 12, 12, 4444.43)
         crear_gasto_concepto_repetido = self.control_cuenta.crearGastoParaActividad(
             self.actividad1_id, self.viajero1_id, self.gasto1_concepto, 2020, 12, 4, 1231.22)
+        self.control_cuenta.crearGastoParaActividad(
+            self.actividad1_id, self.viajero1_id, self.gasto3_concepto, 2020, 12, 4, 5343.11)
 
         self.assertEqual(False, crear_gasto_sin_actividad)
         self.assertEqual(False, crear_gasto_sin_viajero)
@@ -155,3 +158,6 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(False, crear_gasto_monto_negativo)
         self.assertEqual(False, crear_gasto_concepto_en_blanco)
         self.assertEqual(False, crear_gasto_concepto_repetido)
+        gasto_creado_con_exito = self.session.query(Gasto).filter(Gasto.actividad_id == self.actividad1_id,
+                                                                  Gasto.concepto == self.gasto3_concepto).first()
+        self.assertEqual([self.gasto3_concepto, 5343.11], [gasto_creado_con_exito.concepto, gasto_creado_con_exito.monto])
