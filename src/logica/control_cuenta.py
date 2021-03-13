@@ -248,3 +248,13 @@ class ControlCuenta():
 
         if session.query(Actividad).filter(Actividad.nombre == nombre).count() > 0:
             raise IntegrityError()
+        
+        try:
+            m_actividad = session.query(Actividad).filter(
+                Actividad.id == actividad_id).first()
+            m_actividad.nombre = nombre
+            session.add(m_actividad)
+            session.commit()
+        except IntegrityError as exception:
+            session.rollback()
+            raise Exception
