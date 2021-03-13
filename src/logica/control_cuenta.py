@@ -215,3 +215,6 @@ class ControlCuenta():
 
     def darListaViajerosActividad(self, actividad_id):
         return session.query(ActividadViajero).filter(ActividadViajero.actividad_id == actividad_id)
+    
+    def eliminarActividad(self):
+        return None
