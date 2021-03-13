@@ -19,6 +19,7 @@ class Vista_actividad(QWidget):
         self.setAttribute(Qt.WA_DeleteOnClose)
 
         self.interfaz = principal
+        self.actividad = None
 
         self.width = 720
         self.height = 550
@@ -127,7 +128,9 @@ class Vista_actividad(QWidget):
         
         Esta función puebla la tabla de gastos para la actividad
         """
-        self.actualizar_gui_actividad(actividad)
+        if not self.actividad:
+            self.actualizar_gui_actividad(actividad)
+            self.actividad = actividad
 
         self.titulo += " "+actividad.nombre
         self.setWindowTitle(self.titulo)
