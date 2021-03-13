@@ -123,7 +123,14 @@ class ControlCuenta():
         return actividad.gastos
 
     def crearGastoParaActividad(self, actividad_id, viajero_id, concepto, anho, mes, dia, monto):
-        pass
+        if actividad_id is None or viajero_id is None:
+            return False
+        else:
+            actividad = session.query(Actividad).filter_by(id=actividad_id).first()
+            viajero = session.query(Viajero).filter_by(id=viajero_id).first()
+
+            if actividad is None or viajero is None:
+                return False
 
     def listarViajeros(self):
         return session.query(Viajero).all()
