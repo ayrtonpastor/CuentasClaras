@@ -316,4 +316,10 @@ class ActividadTestCase(unittest.TestCase):
         with self.assertRaises(Exception):
             self.control_cuenta.editarActividad(
                 self.actividad1_id, "")
+        
+        #Cambio nombre actividad 4 a un nombre repetido de actividad 1
+        nombre_repetido = self.actividad1.nombre
+        with self.assertRaises(Exception):
+            self.control_cuenta.editarActividad(
+                self.actividad4_id, nombre_repetido)
 
