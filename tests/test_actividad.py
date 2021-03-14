@@ -360,5 +360,7 @@ class ActividadTestCase(unittest.TestCase):
 
     def test_terminar_actividad(self):
         terminar_actividad_con_id_nulo = self.control_cuenta.terminarActividad(None)
+        terminar_actividad_con_id_inexistente = self.control_cuenta.terminarActividad(123)
 
         self.assertEqual(False, terminar_actividad_con_id_nulo)
+        self.assertEqual(False, terminar_actividad_con_id_inexistente)
