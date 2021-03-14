@@ -216,10 +216,12 @@ class ActividadTestCase(unittest.TestCase):
         eliminar_sin_gasto_id = self.control_cuenta.eliminarGasto(None)
         eliminar_gasto_inexistente = self.control_cuenta.eliminarGasto(300)
         eliminar_gasto_actividad_terminada = self.control_cuenta.eliminarGasto(self.gasto4_id)
+        eliminar_gasto_con_exito = self.control_cuenta.eliminarGasto(self.gasto1_id)
 
         self.assertEqual(False, eliminar_sin_gasto_id)
         self.assertEqual(False, eliminar_gasto_inexistente)
         self.assertEqual(False, eliminar_gasto_actividad_terminada)
+        self.assertEqual(True, eliminar_gasto_con_exito)
 
     def asignar_concepto(self, data_factory):
         return data_factory.word()
