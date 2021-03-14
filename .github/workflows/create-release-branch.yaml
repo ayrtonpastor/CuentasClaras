@@ -39,7 +39,7 @@ jobs:
   
   pullrequest-main:
     needs: createrelease
-    name: Pruebas
+    name: Pull request main
     runs-on: ubuntu-latest
     steps:
     - name: Create pull request into main
@@ -49,24 +49,6 @@ jobs:
        head: release/v${{ github.event.inputs.versionName }}
        base: main
        title: v${{ github.event.inputs.versionName }} into main
-       reviewers: ${{ github.event.issue.user.login }}
        body: |
            Hola!
            Este PR fue creado ya que las pruebas en Release se ejecutaron exitosamente.
-
-  pullrequest-develop:
-    needs: createrelease
-    name: Pruebas
-    runs-on: ubuntu-latest
-    steps:
-    - name: Create pull request to develop
-      uses: thomaseizinger/create-pull-request@1.0.0
-      with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          head: release/v${{ github.event.inputs.versionName }}
-          base: develop
-          title: v${{ github.event.inputs.versionName }} into develop
-          reviewers: ${{ github.event.issue.user.login }}
-          body: |
-              Hola!
-              Este PR fue creado ya que las pruebas en Release se ejecutaron exitosamente.
