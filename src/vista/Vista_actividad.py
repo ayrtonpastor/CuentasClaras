@@ -200,7 +200,7 @@ class Vista_actividad(QWidget):
             btn_eliminar.setIconSize(QSize(40, 40))
             btn_eliminar.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             btn_eliminar.clicked.connect(
-                partial(self.eliminar_gasto, numero_fila-1))
+                partial(self.eliminar_gasto, m_gasto))
             self.distribuidor_actividades.addWidget(
                 btn_eliminar, numero_fila, 5, Qt.AlignCenter)
 
@@ -212,11 +212,20 @@ class Vista_actividad(QWidget):
         self.distribuidor_actividades.addItem(
             elemento_de_espacio, numero_fila, 0, 1, 3)
 
-    def eliminar_gasto(self, indice_gasto):
+    def eliminar_gasto(self, gasto):
         """
         Esta función informa a la interfaz del gasto a eliminar
         """
-        self.interfaz.eliminar_gasto(indice_gasto)
+        mensaje_confirmacion = QMessageBox()
+        mensaje_confirmacion.setIcon(QMessageBox.Question)
+        mensaje_confirmacion.setText(
+            "¿Esta seguro de que desea borrar este gasto?\nRecuerde que esta acción es irreversible")
+        mensaje_confirmacion.setWindowTitle("¿Desea borrar el gasto?")
+        mensaje_confirmacion.setWindowIcon(QIcon("src/recursos/smallLogo.png"))
+        mensaje_confirmacion.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        respuesta = mensaje_confirmacion.exec_()
+        if respuesta == QMessageBox.Yes:
+            self.interfaz.eliminar_gasto(gasto)
 
     def volver(self):
         """

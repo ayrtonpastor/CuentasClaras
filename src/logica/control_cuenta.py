@@ -187,6 +187,23 @@ class ControlCuenta():
                     else:
                         return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
 
+    def eliminarGasto(self, gasto_id):
+        if gasto_id is None:
+            return [False, 'Gasto no definido.']
+        else:
+            gasto = session.query(Gasto).filter_by(id=gasto_id).first()
+
+            if gasto is None:
+                return [False, 'El gasto no existe.']
+            else:
+                actividad_terminada = gasto.actividad.terminada
+
+                if actividad_terminada:
+                    return [False, 'No puede borrar el gasto debido a que la actividad ya está termianda.']
+                else:
+                    session.delete(gasto)
+                    session.commit()
+                    return [True, 'El gasto fue eliminado.']
 
     def listarViajeros(self):
         return session.query(Viajero).all()
