@@ -195,6 +195,11 @@ class ControlCuenta():
 
             if gasto is None:
                 return False
+            else:
+                actividad_terminada = gasto.actividad.terminada
+
+                if actividad_terminada:
+                    return False
 
     def listarViajeros(self):
         return session.query(Viajero).all()
