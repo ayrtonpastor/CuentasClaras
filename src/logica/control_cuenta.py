@@ -265,6 +265,9 @@ class ControlCuenta():
 
                     if len(actividad_viajeros) > 0:
                         return False
+                    else:
+                        session.delete(viajero)
+                        session.commit()
                 else:
                     return False
 
