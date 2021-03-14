@@ -200,6 +200,10 @@ class ControlCuenta():
 
                 if actividad_terminada:
                     return False
+                else:
+                    session.delete(gasto)
+                    session.commit()
+                    return True
 
     def listarViajeros(self):
         return session.query(Viajero).all()
