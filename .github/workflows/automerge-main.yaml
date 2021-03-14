@@ -1,21 +1,17 @@
 name: automerge-main
 on:
-  pull_request:
-    branches: [ main ]
+  workflow_run:
+    workflows:
+        - Create Release Branch
+    types:
+      - completed
 jobs:
-  validar-nombre:
-    runs-on: ubuntu-latest
-    steps:   
-      - name: Fail path
-        if: startsWith( github.head_ref, 'release') == false
-        run: exit 1
   automerge:
-    name: Automerge
-    needs: validar-nombre
+    if: github.event.review.state == 'approved' || !github.event.review
     runs-on: ubuntu-latest
     steps:
-      - name: automerge
-        uses: "pascalgn/automerge-action@4536e8847eb62fe2f0ee52c8fa92d17aa97f932f"
-        env:
-          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          MERGE_LABELS: ""
+      - uses: reitermarkus/automerge@v1
+        with:
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
+          required-labels: automerge-release-main
+          pull-request: ${{ github.event.inputs.pull-request }}

@@ -43,12 +43,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Create pull request into main
-      uses: thomaseizinger/create-pull-request@1.0.0
+      uses: peter-evans/create-pull-request@v3
       with:
        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       head: release/v${{ github.event.inputs.versionName }}
+       branch: release/v${{ github.event.inputs.versionName }}
        base: main
        title: v${{ github.event.inputs.versionName }} into main
+       labels: automerge-release-main
        body: |
            Hola!
            Este PR fue creado ya que las pruebas en Release se ejecutaron exitosamente.
