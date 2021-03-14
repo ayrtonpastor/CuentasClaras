@@ -217,9 +217,9 @@ class ActividadTestCase(unittest.TestCase):
         eliminar_gasto_inexistente = self.control_cuenta.eliminarGasto(300)
         eliminar_gasto_actividad_terminada = self.control_cuenta.eliminarGasto(self.gasto4_id)
 
-        self.assertEqual(False, eliminar_sin_gasto_id)
-        self.assertEqual(False, eliminar_gasto_inexistente)
-        self.assertEqual(False, eliminar_gasto_actividad_terminada)
+        self.assertEqual(False, eliminar_sin_gasto_id[0])
+        self.assertEqual(False, eliminar_gasto_inexistente[0])
+        self.assertEqual(False, eliminar_gasto_actividad_terminada[0])
 
         cantidad_previa_eliminacion = self.session.query(Gasto).filter(Gasto.id == self.gasto1_id).count()
         self.control_cuenta.eliminarGasto(self.gasto1_id)

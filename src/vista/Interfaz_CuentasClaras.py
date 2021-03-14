@@ -189,12 +189,22 @@ class App_CuentasClaras(QApplication):
 
         self.vista_actividad.mostrar_gastos_por_actividad(gasto.actividad, self.logica.listarGastos(gasto.actividad_id))
 
-    def eliminar_gasto(self, indice):
+    def eliminar_gasto(self, gasto):
         """
         Esta función elimina un gasto de una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.gastos.pop(indice)
-        self.vista_actividad.mostrar_gastos_por_actividad(self.logica.actividades[self.actividad_actual], self.logica.gastos)
+        actividad = gasto.actividad
+        eliminar_gasto = self.logica.eliminarGasto(gasto.id)
+
+        if eliminar_gasto[0] is not True:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al eliminar gasto")
+            mensaje_error.setText(eliminar_gasto[1])
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+
+        self.vista_actividad.mostrar_gastos_por_actividad(actividad, self.logica.listarGastos(actividad.id))
 
     def mostrar_reporte_compensacion(self, actividad):
         """

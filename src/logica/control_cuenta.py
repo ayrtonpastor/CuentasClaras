@@ -189,21 +189,21 @@ class ControlCuenta():
 
     def eliminarGasto(self, gasto_id):
         if gasto_id is None:
-            return False
+            return [False, 'Gasto no definido.']
         else:
             gasto = session.query(Gasto).filter_by(id=gasto_id).first()
 
             if gasto is None:
-                return False
+                return [False, 'El gasto no existe.']
             else:
                 actividad_terminada = gasto.actividad.terminada
 
                 if actividad_terminada:
-                    return False
+                    return [False, 'No puede borrar el gasto debido a que la actividad ya está termianda.']
                 else:
                     session.delete(gasto)
                     session.commit()
-                    return True
+                    return [True, 'El gasto fue eliminado.']
 
     def listarViajeros(self):
         return session.query(Viajero).all()
