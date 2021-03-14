@@ -323,6 +323,11 @@ class ControlCuenta():
     def terminarActividad(self, actividad_id):
         if actividad_id is None:
             return False
+        else:
+            actividad = session.query(Actividad).filter(Actividad.id == actividad_id).first()
+
+            if actividad is None:
+                return False
 
     def darListaViajerosActividad(self, actividad_id):
         return session.query(ActividadViajero).filter(ActividadViajero.actividad_id == actividad_id)
