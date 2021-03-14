@@ -20,12 +20,14 @@ class ActividadTestCase(unittest.TestCase):
         nombre_actividad1 = self.data_factory.word()
         nombre_actividad2 = self.data_factory.word()
         nombre_actividad3 = self.data_factory.word()
+        nombre_actividad4 = self.data_factory.word()
 
         self.actividad1 = Actividad(nombre=nombre_actividad1, terminada=False)
         self.actividad2 = Actividad(nombre=nombre_actividad2, terminada=False)
         self.actividad3 = Actividad(nombre=nombre_actividad3, terminada=False)
+        self.actividad4 = Actividad(nombre=nombre_actividad4, terminada=True)
 
-        self.session.add_all([self.actividad1, self.actividad2, self.actividad3])
+        self.session.add_all([self.actividad1, self.actividad2, self.actividad3, self.actividad4])
 
         nombre_viajero1 = self.data_factory.name()
         nombre_viajero2 = self.data_factory.name()
@@ -57,20 +59,27 @@ class ActividadTestCase(unittest.TestCase):
         self.actividad_viajero4 = ActividadViajero(
             actividad_id=self.actividad2.id, viajero_id=self.viajero4.id)
 
+        # Viajeros asociados a actividad 4
+        self.actividad_viajero5 = ActividadViajero(
+            actividad_id=self.actividad4.id, viajero_id=self.viajero1.id)
+
         self.session.add_all([self.actividad_viajero1, self.actividad_viajero2, self.actividad_viajero3,
-                              self.actividad_viajero4])
+                              self.actividad_viajero4, self.actividad_viajero5])
 
         concepto_gasto1 = self.asignar_concepto(self.data_factory)
         concepto_gasto2 = self.asignar_concepto(self.data_factory)
         concepto_gasto3 = self.asignar_concepto(self.data_factory)
+        concepto_gasto4 = self.asignar_concepto(self.data_factory)
 
         monto_gasto1 = self.asignar_monto()
         monto_gasto2 = self.asignar_monto()
         monto_gasto3 = self.asignar_monto()
+        monto_gasto4 = self.asignar_monto()
 
         fecha_gasto1 = self.asignar_fecha(self.data_factory)
         fecha_gasto2 = self.asignar_fecha(self.data_factory)
         fecha_gasto3 = self.asignar_fecha(self.data_factory)
+        fecha_gasto4 = self.asignar_fecha(self.data_factory)
 
         # Gastos asociados a la actividad 1
         self.gasto1 = Gasto(concepto=concepto_gasto1, monto=monto_gasto1, fecha=fecha_gasto1,
@@ -81,12 +90,17 @@ class ActividadTestCase(unittest.TestCase):
         # Gastos asociados a la actividad 2
         self.gasto3 = Gasto(concepto=concepto_gasto3, monto=monto_gasto3, fecha=fecha_gasto3,
                             viajero_id=self.viajero3.id, actividad_id=self.actividad2.id)
-        self.session.add_all([self.gasto1, self.gasto2, self.gasto3])
+
+        # Gastos asociados a la actividad 4
+        self.gasto4 = Gasto(concepto=concepto_gasto4, monto=monto_gasto4, fecha=fecha_gasto4,
+                            viajero_id=self.viajero1.id, actividad_id=self.actividad4.id)
+        self.session.add_all([self.gasto1, self.gasto2, self.gasto3, self.gasto4])
 
         self.session.commit()
 
         self.gasto1_id = self.gasto1.id
         self.gasto3_id = self.gasto3.id
+        self.gasto4_id = self.gasto4.id
         self.gasto1_concepto = self.gasto1.concepto
         self.gasto2_concepto = self.gasto2.concepto
         self.gasto3_concepto = self.gasto3.concepto
@@ -201,9 +215,11 @@ class ActividadTestCase(unittest.TestCase):
     def test_eliminar_gasto(self):
         eliminar_sin_gasto_id = self.control_cuenta.eliminarGasto(None)
         eliminar_gasto_inexistente = self.control_cuenta.eliminarGasto(300)
+        eliminar_gasto_actividad_terminada = self.control_cuenta.eliminarGasto(self.gasto4_id)
 
         self.assertEqual(False, eliminar_sin_gasto_id)
         self.assertEqual(False, eliminar_gasto_inexistente)
+        self.assertEqual(False, eliminar_gasto_actividad_terminada)
 
     def asignar_concepto(self, data_factory):
         return data_factory.word()
