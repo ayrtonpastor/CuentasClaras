@@ -88,6 +88,7 @@ class ActividadTestCase(unittest.TestCase):
         self.gasto1_id = self.gasto1.id
         self.gasto3_id = self.gasto3.id
         self.gasto1_concepto = self.gasto1.concepto
+        self.gasto2_concepto = self.gasto2.concepto
         self.gasto3_concepto = self.gasto3.concepto
         self.actividad1_id = self.actividad1.id
         self.actividad2_id = self.actividad2.id
@@ -184,6 +185,8 @@ class ActividadTestCase(unittest.TestCase):
             self.gasto1_id, self.viajero1_id, "", 2020, 6, 12, 8932.34)
         editar_gasto_monto_positivo = self.control_cuenta.editarGasto(
             self.gasto3_id, self.viajero4_id, "Concepto gasto 3 editado", 2020, 9, 24, -5543.12)
+        editar_gasto_concepto_repetido = self.control_cuenta.editarGasto(
+            self.gasto1_id, self.viajero1_id, self.gasto2_concepto, 2020, 9, 24, 543.00)
 
         self.assertEqual(False, editar_gasto_id_inexistente)
         self.assertEqual(False, editar_gasto_id_nulo)
@@ -194,3 +197,4 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(False, editar_gasto_concepto_nulo)
         self.assertEqual(False, editar_gasto_concepto_blanco)
         self.assertEqual(False, editar_gasto_monto_positivo)
+        self.assertEqual(False, editar_gasto_concepto_repetido)
