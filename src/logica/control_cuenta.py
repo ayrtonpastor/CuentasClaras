@@ -176,6 +176,13 @@ class ControlCuenta():
 
                         if actividad_viajero is None:
                             return False
+                        else:
+                            if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(dia, int) and isinstance(monto, (int, float)):
+                                concepto = concepto.strip()
+                                if concepto == "" or anho <= 0 or mes <= 0 or dia <= 0 or monto <= 0:
+                                    return False
+                            else:
+                                return False
 
     def listarViajeros(self):
         return session.query(Viajero).all()
