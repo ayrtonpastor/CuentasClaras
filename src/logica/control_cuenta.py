@@ -155,42 +155,36 @@ class ControlCuenta():
                     return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
 
     def editarGasto(self, gasto_id, viajero_id, concepto, anho, mes, dia, monto):
-        if gasto_id is None:
-            return False
+        if gasto_id is None or viajero_id is None:
+            return [False, 'El gasto y/o el viajero no están definidos.']
         else:
             gasto = session.query(Gasto).filter_by(id=gasto_id).first()
+            viajero = session.query(Viajero).filter_by(id=viajero_id).first()
 
-            if gasto is None:
-                return False
+            if gasto is None or viajero is None:
+                return [False, 'No se encontró el gasto o el viajero definidos.']
             else:
-                if viajero_id is None:
-                    return False
+                actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=gasto.actividad_id, viajero_id=viajero_id).first()
+
+                if actividad_viajero is None:
+                    return [False, 'El viajero no pertenece a la actividad.']
                 else:
-                    viajero = session.query(Viajero).filter_by(id=viajero_id).first()
-
-                    if viajero is None:
-                        return False
-                    else:
-                        actividad_viajero = session.query(ActividadViajero).filter_by(
-                            actividad_id=gasto.actividad_id, viajero_id=viajero_id).first()
-
-                        if actividad_viajero is None:
-                            return False
+                    if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(
+                            dia, int) and isinstance(monto, (int, float)):
+                        concepto = concepto.strip()
+                        if concepto != "" and anho > 0 and mes > 0 and dia > 0 and monto > 0:
+                            fecha = date(anho, mes, dia)
+                            monto = round(float(monto), 2)
+                            gasto.concepto = concepto
+                            gasto.monto = monto
+                            gasto.fecha = fecha
+                            session.commit()
+                            return [True, 'Se editó con éxito el gasto.']
                         else:
-                            if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(dia, int) and isinstance(monto, (int, float)):
-                                concepto = concepto.strip()
-                                if concepto != "" and anho > 0 and mes > 0 and dia > 0 and monto > 0:
-                                    fecha = date(anho, mes, dia)
-                                    monto = round(float(monto), 2)
-                                    gasto.concepto = concepto
-                                    gasto.monto = monto
-                                    gasto.fecha = fecha
-                                    session.commit()
-                                    return True
-                                else:
-                                    return False
-                            else:
-                                return False
+                            return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+                    else:
+                        return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+
 
     def listarViajeros(self):
         return session.query(Viajero).all()
