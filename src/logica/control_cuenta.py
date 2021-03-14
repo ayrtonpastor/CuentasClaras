@@ -246,7 +246,13 @@ class ControlCuenta():
                 return False
 
     def eliminarViajero(self, viajero_id):
-        pass
+        if viajero_id is None:
+            return False
+        else:
+            viajero = session.query(Viajero).filter_by(id=viajero_id).first()
+
+            if viajero is None:
+                return False
 
     def crearActividad(self, nombre):
         if not nombre:
