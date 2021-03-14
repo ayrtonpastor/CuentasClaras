@@ -155,7 +155,13 @@ class ControlCuenta():
                     return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
 
     def editarGasto(self, gasto_id, viajero_id, concepto, anho, mes, dia, monto):
-        pass
+        if gasto_id is None:
+            return False
+        else:
+            gasto = session.query(Gasto).filter_by(id=gasto_id).first()
+
+            if gasto is None:
+                return False
 
     def listarViajeros(self):
         return session.query(Viajero).all()
