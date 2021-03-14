@@ -190,6 +190,11 @@ class ControlCuenta():
     def eliminarGasto(self, gasto_id):
         if gasto_id is None:
             return False
+        else:
+            gasto = session.query(Gasto).filter_by(id=gasto_id).first()
+
+            if gasto is None:
+                return False
 
     def listarViajeros(self):
         return session.query(Viajero).all()
