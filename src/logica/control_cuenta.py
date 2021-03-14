@@ -170,6 +170,12 @@ class ControlCuenta():
 
                     if viajero is None:
                         return False
+                    else:
+                        actividad_viajero = session.query(ActividadViajero).filter_by(
+                            actividad_id=gasto.actividad_id, viajero_id=viajero_id).first()
+
+                        if actividad_viajero is None:
+                            return False
 
     def listarViajeros(self):
         return session.query(Viajero).all()
