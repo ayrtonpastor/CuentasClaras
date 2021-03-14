@@ -298,11 +298,21 @@ class App_CuentasClaras(QApplication):
 
         return viajeros_relacion
 
-    def terminar_actividad(self, indice):
+    def terminar_actividad(self, actividad):
         """
         Esta función permite terminar una actividad (debe implementarse)
         """
-        pass
+        terminar_actividad = self.logica.terminarActividad(actividad.id)
+
+        if terminar_actividad[0] is not True:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al terminar actividad")
+            mensaje_error.setText(terminar_actividad[1])
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+
+        self.vista_lista_actividades.mostrar_actividades(self.logica.listarActividades())
 
     def formatear_parametros_gasto(self, concepto, fecha, valor):
         dia, mes, anho = fecha.split("/")

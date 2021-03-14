@@ -202,7 +202,7 @@ class ControlCuenta():
                 actividad_terminada = gasto.actividad.terminada
 
                 if actividad_terminada:
-                    return [False, 'No puede borrar el gasto debido a que la actividad ya está termianda.']
+                    return [False, 'No puede borrar el gasto debido a que la actividad ya está terminada.']
                 else:
                     session.delete(gasto)
                     session.commit()
@@ -319,6 +319,20 @@ class ControlCuenta():
         except IntegrityError as exception:
             session.rollback()
             raise exception
+
+    def terminarActividad(self, actividad_id):
+        if actividad_id is None:
+            return [False, "Actividad no definida"]
+        else:
+            actividad = session.query(Actividad).filter(Actividad.id == actividad_id).first()
+
+            if actividad is None:
+                return [False, "La actividad no existe"]
+            else:
+                actividad.terminada = True
+                session.add(actividad)
+                session.commit()
+                return [True, "La actividad fue terminada."]
 
     def darListaViajerosActividad(self, actividad_id):
         return session.query(ActividadViajero).filter(ActividadViajero.actividad_id == actividad_id)
