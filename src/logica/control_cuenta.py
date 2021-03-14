@@ -125,7 +125,7 @@ class ControlCuenta():
 
     def crearGastoParaActividad(self, actividad_id, viajero_id, concepto, anho, mes, dia, monto):
         if actividad_id is None or viajero_id is None:
-            return [False, 'El viajero o la actividad no están definidos.']
+            return [False, 'El viajero no están definido.']
         else:
             actividad = session.query(Actividad).filter_by(id=actividad_id).first()
             viajero = session.query(Viajero).filter_by(id=viajero_id).first()
@@ -133,7 +133,7 @@ class ControlCuenta():
                                                                           viajero_id=viajero_id).first()
 
             if actividad is None or viajero is None or actividad_viajero is None:
-                return [False, 'No se encontró el viajero o la actividad.']
+                return [False, 'No se encontró el viajero.']
             else:
                 if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(dia,
                                                                                                                int) and isinstance(
@@ -157,7 +157,7 @@ class ControlCuenta():
 
     def editarGasto(self, gasto_id, viajero_id, concepto, anho, mes, dia, monto):
         if gasto_id is None or viajero_id is None:
-            return [False, 'El gasto y/o el viajero no están definidos.']
+            return [False, 'El viajero no están definido.']
         else:
             gasto = session.query(Gasto).filter_by(id=gasto_id).first()
             viajero = session.query(Viajero).filter_by(id=viajero_id).first()
@@ -179,6 +179,7 @@ class ControlCuenta():
                             gasto.concepto = concepto
                             gasto.monto = monto
                             gasto.fecha = fecha
+                            gasto.viajero_id = viajero_id
                             session.commit()
                             return [True, 'Se editó con éxito el gasto.']
                         else:

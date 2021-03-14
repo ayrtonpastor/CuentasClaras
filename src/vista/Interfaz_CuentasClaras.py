@@ -159,17 +159,7 @@ class App_CuentasClaras(QApplication):
         """
         Esta función inserta un gasto a una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        dia, mes, anho = fecha.split("/")
-        anho = int(anho)
-        mes = int(mes)
-        dia = int(dia)
-        validacion_formato = re.match("^[\+-]?[0-9]+\.?[0-9]+$", valor)
-
-        if validacion_formato:
-            valor = float(valor)
-        else:
-            valor = 0.00
-
+        dia, mes, anho, valor, concepto = self.formatear_parametros_gasto(concepto, fecha, valor)
         insertar_gasto = self.logica.crearGastoParaActividad(actividad.id, viajero_id, concepto, anho, mes, dia, valor)
 
         if insertar_gasto[0] is not True:
@@ -182,12 +172,22 @@ class App_CuentasClaras(QApplication):
 
         self.vista_actividad.mostrar_gastos_por_actividad(actividad, self.logica.listarGastos(actividad.id))
 
-    def editar_gasto(self, indice, concepto, fecha, valor, viajero_nombre, viajero_apellido):
+    def editar_gasto(self, gasto, viajero_id, concepto, fecha, valor):
         """
         Esta función edita un gasto de una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.gastos[indice] = {"Concepto":concepto, "Fecha": fecha, "Valor": int(valor), "Nombre": viajero_nombre, "Apellido": viajero_apellido}
-        self.vista_actividad.mostrar_gastos_por_actividad(self.logica.actividades[self.actividad_actual], self.logica.gastos)
+        dia, mes, anho, valor, concepto = self.formatear_parametros_gasto(concepto, fecha, valor)
+        editar_gasto = self.logica.editarGasto(gasto.id, viajero_id, concepto, anho, mes, dia, valor)
+
+        if editar_gasto[0] is not True:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al editar gasto")
+            mensaje_error.setText(editar_gasto[1])
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+
+        self.vista_actividad.mostrar_gastos_por_actividad(gasto.actividad, self.logica.listarGastos(gasto.actividad_id))
 
     def eliminar_gasto(self, indice):
         """
@@ -284,3 +284,17 @@ class App_CuentasClaras(QApplication):
         Esta función permite terminar una actividad (debe implementarse)
         """
         pass
+
+    def formatear_parametros_gasto(self, concepto, fecha, valor):
+        dia, mes, anho = fecha.split("/")
+        anho = int(anho)
+        mes = int(mes)
+        dia = int(dia)
+        validacion_formato = re.match("^[\+-]?[0-9]+\.?[0-9]+$", valor)
+
+        if validacion_formato:
+            valor = float(valor)
+        else:
+            valor = 0.00
+
+        return dia, mes, anho, valor, concepto

@@ -160,7 +160,7 @@ class Vista_actividad(QWidget):
         for m_gasto in self.gastos:
 
             etiqueta_nombre = QLabel(
-                m_gasto.viajero.nombre + " " + m_gasto.viajero.apellido)
+                m_gasto.viajero.nombre_completo())
             etiqueta_nombre.setWordWrap(True)
             self.distribuidor_actividades.addWidget(
                 etiqueta_nombre, numero_fila, 0)
@@ -188,7 +188,7 @@ class Vista_actividad(QWidget):
             btn_editar.setIconSize(QSize(40, 40))
             btn_editar.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
             btn_editar.clicked.connect(
-                partial(self.editar_gasto, numero_fila-1))
+                partial(self.editar_gasto, m_gasto))
             self.distribuidor_actividades.addWidget(
                 btn_editar, numero_fila, 4, Qt.AlignCenter)
 
@@ -258,16 +258,28 @@ class Vista_actividad(QWidget):
                     viajero_id = viajero.id
                     break
 
-            self.interfaz.insertar_gasto(actividad, viajero_id, dialogo.texto_concepto.text(), str(dialogo.campo_fecha.date().toPyDate().strftime("%d/%m/%Y")),
+            self.interfaz.insertar_gasto(actividad, viajero_id, dialogo.texto_concepto.text(),
+                                         str(dialogo.campo_fecha.date().toPyDate().strftime("%d/%m/%Y")),
                                          dialogo.texto_valor.text())
 
-    def editar_gasto(self, indice_gasto):
+    def editar_gasto(self, gasto):
         """
         Esta función ejecuta el diálogo para editar un gasto
         """
-        dialogo = Dialogo_crear_gasto(
-            self.interfaz.dar_viajeros(), self.gastos[indice_gasto])
+        viajeros = self.interfaz.dar_viajeros_en_actividad(gasto.actividad)
+        dialogo = Dialogo_crear_gasto(viajeros, gasto)
         dialogo.exec_()
+
         if dialogo.resultado == 1:
-            self.interfaz.editar_gasto(indice_gasto, dialogo.texto_concepto.text(), str(dialogo.campo_fecha.date().toPyDate().strftime(
-                "%d-%m-%Y")), dialogo.texto_valor.text(), dialogo.lista_viajeros.currentText().split(" ")[0], dialogo.lista_viajeros.currentText().split(" ")[-1])
+            viajero_seleccionado_nombre = dialogo.lista_viajeros.currentText().split(" ")[0]
+            viajero_seleccionado_apellido = dialogo.lista_viajeros.currentText().split(" ")[-1]
+
+            viajero_id = None
+            for viajero in viajeros:
+                if viajero.nombre == viajero_seleccionado_nombre and viajero.apellido == viajero_seleccionado_apellido:
+                    viajero_id = viajero.id
+                    break
+
+            self.interfaz.editar_gasto(gasto, viajero_id, dialogo.texto_concepto.text(),
+                                       str(dialogo.campo_fecha.date().toPyDate().strftime("%d/%m/%Y")),
+                                       dialogo.texto_valor.text())
