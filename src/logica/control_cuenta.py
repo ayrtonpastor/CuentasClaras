@@ -179,7 +179,15 @@ class ControlCuenta():
                         else:
                             if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(dia, int) and isinstance(monto, (int, float)):
                                 concepto = concepto.strip()
-                                if concepto == "" or anho <= 0 or mes <= 0 or dia <= 0 or monto <= 0:
+                                if concepto != "" and anho > 0 and mes > 0 and dia > 0 and monto > 0:
+                                    fecha = date(anho, mes, dia)
+                                    monto = round(float(monto), 2)
+                                    gasto.concepto = concepto
+                                    gasto.monto = monto
+                                    gasto.fecha = fecha
+                                    session.commit()
+                                    return True
+                                else:
                                     return False
                             else:
                                 return False

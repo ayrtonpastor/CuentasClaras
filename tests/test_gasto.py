@@ -183,10 +183,10 @@ class ActividadTestCase(unittest.TestCase):
             self.gasto1_id, self.viajero1_id, None, 2020, 6, 12, 8932.34)
         editar_gasto_concepto_blanco = self.control_cuenta.editarGasto(
             self.gasto1_id, self.viajero1_id, "", 2020, 6, 12, 8932.34)
-        editar_gasto_monto_positivo = self.control_cuenta.editarGasto(
+        editar_gasto_monto_negativo = self.control_cuenta.editarGasto(
             self.gasto3_id, self.viajero4_id, "Concepto gasto 3 editado", 2020, 9, 24, -5543.12)
-        editar_gasto_concepto_repetido = self.control_cuenta.editarGasto(
-            self.gasto1_id, self.viajero1_id, self.gasto2_concepto, 2020, 9, 24, 543.00)
+        self.control_cuenta.editarGasto(
+            self.gasto1_id, self.viajero1_id, self.gasto3_concepto, 2020, 8, 30, 543.00)
 
         self.assertEqual(False, editar_gasto_id_inexistente)
         self.assertEqual(False, editar_gasto_id_nulo)
@@ -196,5 +196,7 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(False, editar_gasto_fecha_erronea)
         self.assertEqual(False, editar_gasto_concepto_nulo)
         self.assertEqual(False, editar_gasto_concepto_blanco)
-        self.assertEqual(False, editar_gasto_monto_positivo)
-        self.assertEqual(False, editar_gasto_concepto_repetido)
+        self.assertEqual(False, editar_gasto_monto_negativo)
+        gasto_editado_con_exito = self.session.query(Gasto).filter(Gasto.id == self.gasto1_id).first()
+        self.assertEqual([self.gasto3_concepto, "{:.2f}".format(543.00)],
+                         [gasto_editado_con_exito.concepto, "{:.2f}".format(gasto_editado_con_exito.monto)])
