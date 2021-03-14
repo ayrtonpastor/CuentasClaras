@@ -85,6 +85,8 @@ class ActividadTestCase(unittest.TestCase):
 
         self.session.commit()
 
+        self.gasto1_id = self.gasto1.id
+        self.gasto3_id = self.gasto3.id
         self.gasto1_concepto = self.gasto1.concepto
         self.gasto3_concepto = self.gasto3.concepto
         self.actividad1_id = self.actividad1.id
@@ -162,3 +164,12 @@ class ActividadTestCase(unittest.TestCase):
                                                                   Gasto.concepto == self.gasto3_concepto).first()
         self.assertEqual([self.gasto3_concepto, "{:.2f}".format(5343.11)],
                          [gasto_creado_con_exito.concepto, "{:.2f}".format(gasto_creado_con_exito.monto)])
+
+    def test_editar_gasto(self):
+        editar_gasto_id_inexistente = self.control_cuenta.editarGasto(
+            None, self.viajero1_id, "Concepto gasto no id editado", 2020, 5, 4, 2323.78)
+        editar_gasto_id_nulo = self.control_cuenta.editarGasto(
+            123, self.viajero1_id, "Concepto gasto id nulo editado", 2020, 5, 4, 2323.78)
+
+        self.assertEqual(False, editar_gasto_id_inexistente)
+        self.assertEqual(False, editar_gasto_id_nulo)
