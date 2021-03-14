@@ -99,3 +99,10 @@ class ViajeroTestCase(unittest.TestCase):
         self.assertEqual(self.viajero2_nombre_original, viajero2.nombre)
         self.assertEqual([nuevo_nombre3, nuevo_apellido3], [viajero3.nombre, viajero3.apellido])
         self.assertEqual(False, editar_viajero_inexistente)
+
+    def test_eliminar_viajero(self):
+        eliminar_viajero_con_id_nulo = self.control_cuenta.eliminarViajero(None)
+        eliminar_viajero_inexistente = self.control_cuenta.eliminarViajero(231)
+
+        self.assertEqual(False, eliminar_viajero_con_id_nulo)
+        self.assertEqual(False, eliminar_viajero_inexistente)

@@ -245,6 +245,9 @@ class ControlCuenta():
             else:
                 return False
 
+    def eliminarViajero(self, viajero_id):
+        pass
+
     def crearActividad(self, nombre):
         if not nombre:
             return None

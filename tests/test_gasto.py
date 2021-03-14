@@ -66,20 +66,20 @@ class ActividadTestCase(unittest.TestCase):
         self.session.add_all([self.actividad_viajero1, self.actividad_viajero2, self.actividad_viajero3,
                               self.actividad_viajero4, self.actividad_viajero5])
 
-        concepto_gasto1 = self.asignar_concepto(self.data_factory)
-        concepto_gasto2 = self.asignar_concepto(self.data_factory)
-        concepto_gasto3 = self.asignar_concepto(self.data_factory)
-        concepto_gasto4 = self.asignar_concepto(self.data_factory)
+        concepto_gasto1 = self.asignar_concepto()
+        concepto_gasto2 = self.asignar_concepto()
+        concepto_gasto3 = self.asignar_concepto()
+        concepto_gasto4 = self.asignar_concepto()
 
         monto_gasto1 = self.asignar_monto()
         monto_gasto2 = self.asignar_monto()
         monto_gasto3 = self.asignar_monto()
         monto_gasto4 = self.asignar_monto()
 
-        fecha_gasto1 = self.asignar_fecha(self.data_factory)
-        fecha_gasto2 = self.asignar_fecha(self.data_factory)
-        fecha_gasto3 = self.asignar_fecha(self.data_factory)
-        fecha_gasto4 = self.asignar_fecha(self.data_factory)
+        fecha_gasto1 = self.asignar_fecha()
+        fecha_gasto2 = self.asignar_fecha()
+        fecha_gasto3 = self.asignar_fecha()
+        fecha_gasto4 = self.asignar_fecha()
 
         # Gastos asociados a la actividad 1
         self.gasto1 = Gasto(concepto=concepto_gasto1, monto=monto_gasto1, fecha=fecha_gasto1,
@@ -149,19 +149,19 @@ class ActividadTestCase(unittest.TestCase):
 
     def test_crear_gasto_para_actividad(self):
         crear_gasto_sin_actividad = self.control_cuenta.crearGastoParaActividad(
-            None, self.viajero1_id, "Concepto gasto 1", 2020, 12, 4, 1234.43)
+            None, self.viajero1_id, self.asignar_concepto(), 2020, 12, 4, self.asignar_monto())
         crear_gasto_sin_viajero = self.control_cuenta.crearGastoParaActividad(
-            self.actividad1_id, 200, "Concepto gasto 2", 2020, 12, 4, 1234.43)
+            self.actividad1_id, 200, self.asignar_concepto(), 2020, 12, 4, self.asignar_monto())
         crear_gasto_de_viajero_fuera_de_actividad = self.control_cuenta.crearGastoParaActividad(
-            self.actividad1_id, self.viajero4_id, "Concepto gasto 3", 2020, 12, 4, 1234.43)
+            self.actividad1_id, self.viajero4_id, self.asignar_concepto(), 2020, 12, 4, self.asignar_monto())
         crear_gasto_fecha_erronea = self.control_cuenta.crearGastoParaActividad(
-            self.actividad1_id, self.viajero1_id, "Concepto gasto 4", -2020, 12, None, 1234.43)
+            self.actividad1_id, self.viajero1_id, self.asignar_concepto(), -2020, 12, None, self.asignar_monto())
         crear_gasto_concepto_nulo = self.control_cuenta.crearGastoParaActividad(
             self.actividad1_id, self.viajero1_id, None, 2020, 12, 12, 1234.43)
         crear_gasto_monto_negativo = self.control_cuenta.crearGastoParaActividad(
-            self.actividad1_id, self.viajero1_id, "Concepto gasto 6", 2020, 12, 12, -4444.43)
+            self.actividad1_id, self.viajero1_id, self.asignar_concepto(), 2020, 12, 12, -1)
         crear_gasto_concepto_en_blanco = self.control_cuenta.crearGastoParaActividad(
-            self.actividad1_id, self.viajero1_id, "", 2020, 12, 12, 4444.43)
+            self.actividad1_id, self.viajero1_id, "", 2020, 12, 12, self.asignar_monto())
         self.control_cuenta.crearGastoParaActividad(
             self.actividad1_id, self.viajero1_id, self.gasto3_concepto, 2020, 12, 4, 5343.11)
 
@@ -179,23 +179,23 @@ class ActividadTestCase(unittest.TestCase):
 
     def test_editar_gasto(self):
         editar_gasto_id_inexistente = self.control_cuenta.editarGasto(
-            None, self.viajero1_id, "Concepto gasto no id editado", 2020, 5, 4, 2323.78)
+            None, self.viajero1_id, self.asignar_concepto(), 2020, 5, 4, self.asignar_monto())
         editar_gasto_id_nulo = self.control_cuenta.editarGasto(
-            123, self.viajero1_id, "Concepto gasto id nulo editado", 2020, 5, 4, 2323.78)
+            123, self.viajero1_id, self.asignar_concepto(), 2020, 5, 4, self.asignar_monto())
         editar_gasto_sin_viajero = self.control_cuenta.editarGasto(
-            self.gasto1_id, None, "Concepto gasto sin viajero", 2020, 5, 4, 2323.78)
+            self.gasto1_id, None, self.asignar_concepto(), 2020, 5, 4, self.asignar_monto())
         editar_gasto_viajero_inexistente = self.control_cuenta.editarGasto(
-            self.gasto3_id, 123, "Concepto gasto viajero inexistente", 2020, 5, 4, 2323.78)
+            self.gasto3_id, 123, self.asignar_concepto(), 2020, 5, 4, self.asignar_monto())
         editar_gasto_viajero_no_perteneciente_a_actividad = self.control_cuenta.editarGasto(
-            self.gasto1_id, self.viajero4_id, "Concepto gasto con viajero fuera de actividad", 2020, 5, 4, 2323.78)
+            self.gasto1_id, self.viajero4_id, self.asignar_concepto(), 2020, 5, 4, self.asignar_monto())
         editar_gasto_fecha_erronea = self.control_cuenta.editarGasto(
-            self.gasto1_id, self.viajero1_id, "Concepto gasto 1 editado", -2020, 12, None, 6663.43)
+            self.gasto1_id, self.viajero1_id, self.asignar_concepto(), -2020, 12, None, self.asignar_monto())
         editar_gasto_concepto_nulo = self.control_cuenta.editarGasto(
-            self.gasto1_id, self.viajero1_id, None, 2020, 6, 12, 8932.34)
+            self.gasto1_id, self.viajero1_id, None, 2020, 6, 12, self.asignar_monto())
         editar_gasto_concepto_blanco = self.control_cuenta.editarGasto(
-            self.gasto1_id, self.viajero1_id, "", 2020, 6, 12, 8932.34)
+            self.gasto1_id, self.viajero1_id, "", 2020, 6, 12, self.asignar_monto())
         editar_gasto_monto_negativo = self.control_cuenta.editarGasto(
-            self.gasto3_id, self.viajero4_id, "Concepto gasto 3 editado", 2020, 9, 24, -5543.12)
+            self.gasto3_id, self.viajero4_id, self.asignar_concepto(), 2020, 9, 24, -1)
         self.control_cuenta.editarGasto(
             self.gasto1_id, self.viajero1_id, self.gasto3_concepto, 2020, 8, 30, 543.00)
 
@@ -228,11 +228,15 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual(1, cantidad_previa_eliminacion)
         self.assertEqual(0, cantidad_posterior_eliminacion)
 
-    def asignar_concepto(self, data_factory):
-        return data_factory.word()
+    def asignar_concepto(self):
+        return self.data_factory.word()
 
     def asignar_monto(self):
         return round(random.uniform(1000, random.randint(1000, 15000)), 2)
 
-    def asignar_fecha(self, data_factory):
-        return data_factory.date_between_dates(date_start=date(2019, 1, 1), date_end=date.today())
+    def asignar_fecha(self):
+        return self.data_factory.date_between_dates(date_start=date(2019, 1, 1), date_end=date.today())
+
+    def parsear_fecha(self):
+        dia, mes, anho = self.asignar_fecha().strftime("%d/%m/%Y").split("/")
+        return dia, mes, anho
