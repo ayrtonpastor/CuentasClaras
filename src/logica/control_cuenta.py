@@ -187,6 +187,8 @@ class ControlCuenta():
                     else:
                         return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
 
+    def eliminarGasto(self, gasto_id):
+        pass
 
     def listarViajeros(self):
         return session.query(Viajero).all()

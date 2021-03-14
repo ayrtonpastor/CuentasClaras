@@ -198,6 +198,11 @@ class ActividadTestCase(unittest.TestCase):
         self.assertEqual([self.gasto3_concepto, "{:.2f}".format(543.00)],
                          [gasto_editado_con_exito.concepto, "{:.2f}".format(gasto_editado_con_exito.monto)])
 
+    def test_eliminar_gasto(self):
+        eliminar_sin_gasto_id = self.control_cuenta.eliminarGasto(None)
+
+        self.assertEqual(False, eliminar_sin_gasto_id)
+
     def asignar_concepto(self, data_factory):
         return data_factory.word()
 
