@@ -253,6 +253,11 @@ class ControlCuenta():
 
             if viajero is None:
                 return False
+            else:
+                actividad_viajeros = session.query(ActividadViajero).filter(ActividadViajero.viajero_id == viajero.id).all()
+
+                if len(actividad_viajeros) > 0:
+                    return False
 
     def crearActividad(self, nombre):
         if not nombre:
