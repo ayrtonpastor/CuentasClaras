@@ -258,16 +258,12 @@ class ControlCuenta():
                 return False
             else:
                 gastos = session.query(Gasto).filter(Gasto.viajero_id == viajero.id).all()
+                actividad_viajeros = session.query(ActividadViajero).filter(
+                    ActividadViajero.viajero_id == viajero.id).all()
 
-                if len(gastos) == 0:
-                    actividad_viajeros = session.query(ActividadViajero).filter(
-                        ActividadViajero.viajero_id == viajero.id).all()
-
-                    if len(actividad_viajeros) > 0:
-                        return False
-                    else:
-                        session.delete(viajero)
-                        session.commit()
+                if len(gastos) == 0 and len(actividad_viajeros) == 0:
+                    session.delete(viajero)
+                    session.commit()
                 else:
                     return False
 
