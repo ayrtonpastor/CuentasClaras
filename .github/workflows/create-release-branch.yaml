@@ -19,6 +19,7 @@ jobs:
        git config user.name "GitHub Actions"
        git config user.email noreply@github.com
        git config --add remote.origin.url git@github.com:MISW-4101-Practicas/MISW4101-202111-Grupo40.git
+       git pull
     - name: Push new branch
       run: git push origin release/v${{ github.event.inputs.versionName }}
     - name: Configuración de entorno de python
