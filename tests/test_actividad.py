@@ -362,8 +362,8 @@ class ActividadTestCase(unittest.TestCase):
         terminar_actividad_con_id_nulo = self.control_cuenta.terminarActividad(None)
         terminar_actividad_con_id_inexistente = self.control_cuenta.terminarActividad(123)
 
-        self.assertEqual(False, terminar_actividad_con_id_nulo)
-        self.assertEqual(False, terminar_actividad_con_id_inexistente)
+        self.assertEqual(False, terminar_actividad_con_id_nulo[0])
+        self.assertEqual(False, terminar_actividad_con_id_inexistente[0])
 
         self.control_cuenta.terminarActividad(self.actividad1_id)
         actividad = self.session.query(Actividad).filter(Actividad.id == self.actividad1_id).first()

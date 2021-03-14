@@ -144,14 +144,15 @@ class Vista_lista_actividades(QWidget):
 
                 # Creación de los botones asociados a cada acción
 
-                btn_terminar = QPushButton("", self)
-                btn_terminar.setToolTip("Terminar")
-                btn_terminar.setFixedSize(40, 40)
-                btn_terminar.setIcon(QIcon("src/recursos/001-no-stopping.png"))
-                btn_terminar.clicked.connect(
-                    partial(self.terminar_actividad, numero_fila-1))
-                self.distribuidor_tabla_actividades.addWidget(
-                    btn_terminar, numero_fila, 1, Qt.AlignCenter)
+                if not my_actividad.terminada:
+                    btn_terminar = QPushButton("", self)
+                    btn_terminar.setToolTip("Terminar")
+                    btn_terminar.setFixedSize(40, 40)
+                    btn_terminar.setIcon(QIcon("src/recursos/001-no-stopping.png"))
+                    btn_terminar.clicked.connect(
+                        partial(self.terminar_actividad, my_actividad))
+                    self.distribuidor_tabla_actividades.addWidget(
+                        btn_terminar, numero_fila, 1, Qt.AlignCenter)
 
                 btn_ver_actividad = QPushButton("", self)
                 btn_ver_actividad.setToolTip("Ver")
@@ -200,7 +201,16 @@ class Vista_lista_actividades(QWidget):
         """
         Esta función informa a la interfaz para terminar una actividad
         """
-        self.interfaz.terminar_actividad(actividad)
+        mensaje_confirmacion = QMessageBox()
+        mensaje_confirmacion.setIcon(QMessageBox.Question)
+        mensaje_confirmacion.setText(
+            "¿Esta seguro de que desea terminar esta actividad?\nRecuerde que esta acción es irreversible")
+        mensaje_confirmacion.setWindowTitle("¿Desea terminar "+actividad.nombre+"?")
+        mensaje_confirmacion.setWindowIcon(QIcon("src/recursos/smallLogo.png"))
+        mensaje_confirmacion.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        respuesta = mensaje_confirmacion.exec_()
+        if respuesta == QMessageBox.Yes:
+            self.interfaz.terminar_actividad(actividad)
 
     def mostrar_actividad(self, actividad):
         """
