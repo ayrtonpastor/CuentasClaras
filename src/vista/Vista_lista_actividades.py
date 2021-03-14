@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtGui import *
+from PyQt5.QtWidgets import * 
+from PyQt5.QtGui import * 
 from PyQt5.QtCore import *
 from functools import partial
 
@@ -238,10 +238,9 @@ class Vista_lista_actividades(QWidget):
     def mostrar_dialogo_insertar_viajeros(self, actividad):
         """
         Esta función ejecuta el diálogo para agregar un viajero
-        """
-        dialogo = Dialogo_agregar_viajeros()
-        dialogo.mostrar_viajeros(
-            self.interfaz.dar_viajeros_en_actividad(actividad))
+        """     
+        dialogo=Dialogo_agregar_viajeros()
+        dialogo.mostrar_viajeros(self.interfaz.dar_viajeros_y_relacion_actividad(actividad))
         dialogo.exec_()
         if dialogo.resultado == 1:
             self.interfaz.actualizar_viajeros(

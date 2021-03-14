@@ -1,3 +1,4 @@
+import re
 from PyQt5.QtWidgets import QApplication, QMessageBox
 from .Vista_lista_actividades import Vista_lista_actividades
 from .Vista_lista_viajeros import Vista_lista_viajeros
@@ -154,47 +155,60 @@ class App_CuentasClaras(QApplication):
         self.vista_actividad.mostrar_gastos_por_actividad(
             actividad, self.logica.listarGastos(actividad.id))
 
-    def insertar_gasto(self, concepto, fecha, valor, viajero_nombre, viajero_apellido):
+    def insertar_gasto(self, actividad, viajero_id, concepto, fecha, valor):
         """
         Esta función inserta un gasto a una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.gastos.append({"Concepto": concepto, "Fecha": fecha, "Valor": int(
-            valor), "Nombre": viajero_nombre, "Apellido": viajero_apellido})
-        self.vista_actividad.mostrar_gastos_por_actividad(
-            self.logica.actividades[self.actividad_actual], self.logica.gastos)
+        dia, mes, anho = fecha.split("/")
+        anho = int(anho)
+        mes = int(mes)
+        dia = int(dia)
+        validacion_formato = re.match("^[\+-]?[0-9]+\.?[0-9]+$", valor)
+
+        if validacion_formato:
+            valor = float(valor)
+        else:
+            valor = 0.00
+
+        insertar_gasto = self.logica.crearGastoParaActividad(actividad.id, viajero_id, concepto, anho, mes, dia, valor)
+
+        if insertar_gasto[0] is not True:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al agregar gasto")
+            mensaje_error.setText(insertar_gasto[1])
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+
+        self.vista_actividad.mostrar_gastos_por_actividad(actividad, self.logica.listarGastos(actividad.id))
 
     def editar_gasto(self, indice, concepto, fecha, valor, viajero_nombre, viajero_apellido):
         """
         Esta función edita un gasto de una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.gastos[indice] = {"Concepto": concepto, "Fecha": fecha, "Valor": int(
-            valor), "Nombre": viajero_nombre, "Apellido": viajero_apellido}
-        self.vista_actividad.mostrar_gastos_por_actividad(
-            self.logica.actividades[self.actividad_actual], self.logica.gastos)
+        self.logica.gastos[indice] = {"Concepto":concepto, "Fecha": fecha, "Valor": int(valor), "Nombre": viajero_nombre, "Apellido": viajero_apellido}
+        self.vista_actividad.mostrar_gastos_por_actividad(self.logica.actividades[self.actividad_actual], self.logica.gastos)
 
     def eliminar_gasto(self, indice):
         """
         Esta función elimina un gasto de una actividad en la lógica (debe modificarse cuando se construya la lógica)
         """
         self.logica.gastos.pop(indice)
-        self.vista_actividad.mostrar_gastos_por_actividad(
-            self.logica.actividades[self.actividad_actual], self.logica.gastos)
+        self.vista_actividad.mostrar_gastos_por_actividad(self.logica.actividades[self.actividad_actual], self.logica.gastos)
 
     def mostrar_reporte_compensacion(self, actividad):
         """
         Esta función muestra la ventana del reporte de compensación
         """
         self.vista_reporte_comensacion = Vista_reporte_compensacion(self)
-        self.vista_reporte_comensacion.mostrar_reporte_compensacion(
-            matriz_compensacion=self.logica.crearReporteCompensacion(actividad.id), actividad=actividad)
+        self.vista_reporte_comensacion.mostrar_reporte_compensacion(matriz_compensacion=self.logica.crearReporteCompensacion(actividad.id), actividad=actividad)
 
     def mostrar_reporte_gastos_viajero(self, actividad):
         """
         Esta función muestra el reporte de gastos consolidados
         """
         self.vista_reporte_gastos = Vista_reporte_gastos_viajero(self)
-        self.vista_reporte_gastos.mostar_reporte_gastos(
-            lista_gastos=self.logica.crearReporteGastosPorViajero(actividad.id), actividad=actividad)
+        self.vista_reporte_gastos.mostar_reporte_gastos(lista_gastos=self.logica.crearReporteGastosPorViajero(actividad.id), actividad=actividad)
 
     def actualizar_viajeros(self, actividad, n_viajeros_en_actividad, viajeros_a_eliminar):
         """
@@ -234,24 +248,36 @@ class App_CuentasClaras(QApplication):
         Esta función pasa los viajeros de una actividad
         """
         viajeros = self.logica.listarViajeros()
-        viajeros_en_actividad = self.logica.darListaViajerosActividad(
-            actividad.id)
-
-        def evaluar_igualdad(
-            viajero, actividadviajero): return viajero.id == actividadviajero.viajero_id
+        viajeros_en_actividad = self.logica.darListaViajerosActividad(actividad.id)
+        evaluar_igualdad = lambda viajero, actividadviajero: viajero.id == actividadviajero.viajero_id
         lista_viajeros_en_actividad = []
+        for viajero in viajeros:
+            for actividadViajero in viajeros_en_actividad:
+                if evaluar_igualdad(viajero, actividadViajero):
+                    lista_viajeros_en_actividad.append(viajero)
+                    break
+
+        return lista_viajeros_en_actividad
+
+    def dar_viajeros_y_relacion_actividad(self, actividad):
+        """
+        Esta función pasa los viajeros de una actividad
+        """
+        viajeros = self.logica.listarViajeros()
+        viajeros_en_actividad = self.logica.darListaViajerosActividad(actividad.id)
+        evaluar_igualdad = lambda viajero, actividadviajero: viajero.id == actividadviajero.viajero_id
+        viajeros_relacion = []
         for viajero in viajeros:
             presente = False
             for actividadViajero in viajeros_en_actividad:
                 if evaluar_igualdad(viajero, actividadViajero):
-                    lista_viajeros_en_actividad.append(
-                        (viajero, actividadViajero))
+                    viajeros_relacion.append( (viajero, actividadViajero) )
                     presente = True
                     break
             if not presente:
-                lista_viajeros_en_actividad.append((viajero, None))
+                viajeros_relacion.append((viajero, None))
 
-        return lista_viajeros_en_actividad
+        return viajeros_relacion
 
     def terminar_actividad(self, indice):
         """

@@ -19,6 +19,7 @@ class Vista_actividad(QWidget):
         self.setAttribute(Qt.WA_DeleteOnClose)
 
         self.interfaz = principal
+        self.actividad = None
 
         self.width = 720
         self.height = 550
@@ -48,7 +49,6 @@ class Vista_actividad(QWidget):
         self.btn_aniadir_gasto.setIcon(QIcon("src/recursos/006-add.png"))
         self.distribuidor_botones.addWidget(
             self.btn_aniadir_gasto, 0, 0, Qt.AlignCenter)
-        self.btn_aniadir_gasto.clicked.connect(self.crear_gasto)
 
         self.btn_reporte_gastos_viajeros = QPushButton(
             "Gastos por Viajero", self)
@@ -118,6 +118,8 @@ class Vista_actividad(QWidget):
             partial(self.mostrar_reporte_comensacion, actividad))
         self.btn_reporte_gastos_viajeros.clicked.connect(
             partial(self.mostrar_reporte_gastos_por_viajero, actividad))
+        self.btn_aniadir_gasto.clicked.connect(
+            partial(self.crear_gasto, actividad))
 
     def mostrar_gastos_por_actividad(self, actividad, gastos):
         """
@@ -126,7 +128,9 @@ class Vista_actividad(QWidget):
         
         Esta función puebla la tabla de gastos para la actividad
         """
-        self.actualizar_gui_actividad(actividad)
+        if not self.actividad:
+            self.actualizar_gui_actividad(actividad)
+            self.actividad = actividad
 
         self.titulo += " "+actividad.nombre
         self.setWindowTitle(self.titulo)
@@ -236,15 +240,26 @@ class Vista_actividad(QWidget):
         self.hide()
         self.interfaz.mostrar_reporte_gastos_viajero(actividad)
 
-    def crear_gasto(self):
+    def crear_gasto(self, actividad):
         """
         Esta función ejecuta el diálogo para crear un gasto
         """
-        dialogo = Dialogo_crear_gasto(self.interfaz.dar_viajeros(), None)
+        viajeros = self.interfaz.dar_viajeros_en_actividad(actividad)
+        dialogo = Dialogo_crear_gasto(viajeros, None)
         dialogo.exec_()
+
         if dialogo.resultado == 1:
-            self.interfaz.insertar_gasto(dialogo.texto_concepto.text(), str(dialogo.campo_fecha.date().currentDate().toPyDate().strftime(
-                "%d-%m-%Y")), dialogo.texto_valor.text(), dialogo.lista_viajeros.currentText().split(" ")[0], dialogo.lista_viajeros.currentText().split(" ")[-1])
+            viajero_seleccionado_nombre = dialogo.lista_viajeros.currentText().split(" ")[0]
+            viajero_seleccionado_apellido = dialogo.lista_viajeros.currentText().split(" ")[-1]
+
+            viajero_id = None
+            for viajero in viajeros:
+                if viajero.nombre == viajero_seleccionado_nombre and viajero.apellido == viajero_seleccionado_apellido:
+                    viajero_id = viajero.id
+                    break
+
+            self.interfaz.insertar_gasto(actividad, viajero_id, dialogo.texto_concepto.text(), str(dialogo.campo_fecha.date().toPyDate().strftime("%d/%m/%Y")),
+                                         dialogo.texto_valor.text())
 
     def editar_gasto(self, indice_gasto):
         """

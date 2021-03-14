@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import * 
-from PyQt5.QtGui import * 
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from functools import partial
 
@@ -10,10 +10,10 @@ class Dialogo_crear_gasto(QDialog):
     def __init__(self,viajeros, gasto):
         """
         Constructor del diálogo
-        """   
+        """
         super().__init__()
 
-        
+
         self.setFixedSize(340, 250)
         self.setWindowIcon(QIcon("src/devcuentasclaras/recursos/smallLogo.png"))
 
@@ -21,12 +21,12 @@ class Dialogo_crear_gasto(QDialog):
         self.viajeros = viajeros
 
         self.widget_lista = QListWidget()
-        
+
 
         distribuidor_dialogo = QGridLayout()
         self.setLayout(distribuidor_dialogo)
         numero_fila=0
-        
+
         #Si el diálogo se usa para crear o editar, el título cambia.
 
         titulo=""
@@ -34,14 +34,14 @@ class Dialogo_crear_gasto(QDialog):
             titulo="Nuevo Gasto"
         else:
             titulo="Editar Gasto"
-      
+
 
         self.setWindowTitle(titulo)
 
         #Creación de las etiquetas y campos de texto
 
         etiqueta_concepto=QLabel("Concepto")
-        distribuidor_dialogo.addWidget(etiqueta_concepto,numero_fila,0,1,3)                
+        distribuidor_dialogo.addWidget(etiqueta_concepto,numero_fila,0,1,3)
         numero_fila=numero_fila+1
 
         self.texto_concepto=QLineEdit(self)
@@ -49,16 +49,18 @@ class Dialogo_crear_gasto(QDialog):
         numero_fila=numero_fila+1
 
         etiqueta_fecha=QLabel("Fecha")
-        distribuidor_dialogo.addWidget(etiqueta_fecha,numero_fila,0,1,3)                
+        distribuidor_dialogo.addWidget(etiqueta_fecha,numero_fila,0,1,3)
         numero_fila=numero_fila+1
 
-        #Campo fecha es un elemento especial para modificar fechas
-        self.campo_fecha=QDateEdit(self)
-        distribuidor_dialogo.addWidget(self.campo_fecha,numero_fila,0,1,3)
-        numero_fila=numero_fila+1
+        # Campo fecha es un elemento especial para modificar fechas
+        self.campo_fecha = QDateEdit(self)
+        self.campo_fecha.setDate(QDate.currentDate())
+        self.campo_fecha.setDisplayFormat("dd/MM/yyyy")
+        distribuidor_dialogo.addWidget(self.campo_fecha, numero_fila, 0, 1, 3)
+        numero_fila = numero_fila + 1
 
         etiqueta_valor=QLabel("Valor")
-        distribuidor_dialogo.addWidget(etiqueta_valor,numero_fila,0,1,3)                
+        distribuidor_dialogo.addWidget(etiqueta_valor,numero_fila,0,1,3)
         numero_fila=numero_fila+1
 
         self.texto_valor=QLineEdit(self)
@@ -66,16 +68,15 @@ class Dialogo_crear_gasto(QDialog):
         numero_fila=numero_fila+1
 
         etiqueta_viajero=QLabel("Viajero")
-        distribuidor_dialogo.addWidget(etiqueta_viajero,numero_fila,0,1,3)                
+        distribuidor_dialogo.addWidget(etiqueta_viajero,numero_fila,0,1,3)
         numero_fila=numero_fila+1
 
-        
+
         self.lista_viajeros = QComboBox(self)
 
         for viajero in viajeros:
-            self.lista_viajeros.addItem(viajero["Nombre"] + " " +viajero["Apellido"])
-        
-             
+            self.lista_viajeros.addItem(viajero.nombre_completo())
+
         distribuidor_dialogo.addWidget(self.lista_viajeros,numero_fila,0,1,3)
         numero_fila=numero_fila+1
 
@@ -91,17 +92,17 @@ class Dialogo_crear_gasto(QDialog):
 
         #Si el diálogo se usa para editar, se debe poblar con la información del gasto a editar
         if gasto != None:
-            self.texto_concepto.setText(gasto["Concepto"])
-            self.campo_fecha.setDate(QDate.fromString(gasto["Fecha"],"dd-MM-yyyy"))
-            self.texto_valor.setText(str(gasto["Valor"]))
-            indice = self.lista_viajeros.findText(gasto["Nombre"]+" "+gasto["Apellido"])
+            self.texto_concepto.setText(gasto.concepto)
+            self.campo_fecha.setDate(QDate.fromString(gasto["Fecha"], "dd/MM/yyyy"))
+            self.texto_valor.setText(str(gasto.monto))
+            indice = self.lista_viajeros.findText(gasto.viajero.nombre_completo())
             self.lista_viajeros.setCurrentIndex(indice)
 
-    
+
     def guardar(self):
         """
         Esta función envía la información de que se han guardado los cambios
-        """   
+        """
         self.resultado=1
         self.close()
         return self.resultado
@@ -110,7 +111,7 @@ class Dialogo_crear_gasto(QDialog):
     def cancelar(self):
         """
         Esta función envía la información de que se ha cancelado la operación
-        """   
+        """
         self.resultado=0
         self.close()
         return self.resultado
