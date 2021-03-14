@@ -129,30 +129,31 @@ class ControlCuenta():
         else:
             actividad = session.query(Actividad).filter_by(id=actividad_id).first()
             viajero = session.query(Viajero).filter_by(id=viajero_id).first()
-            actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=actividad_id, viajero_id=viajero_id).first()
+            actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=actividad_id,
+                                                                          viajero_id=viajero_id).first()
 
             if actividad is None or viajero is None or actividad_viajero is None:
                 return [False, 'No se encontró el viajero o la actividad.']
             else:
-                if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(dia, int) and isinstance(monto, (int, float)):
+                if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(dia,
+                                                                                                               int) and isinstance(
+                        monto, (int, float)):
                     concepto = concepto.strip()
 
                     if concepto != "" and anho > 0 and mes > 0 and dia > 0 and monto > 0:
-                        gastos = session.query(Gasto).filter(Gasto.concepto == concepto, Gasto.actividad_id == actividad_id).all()
-
-                        if len(gastos) == 0:
-                            fecha = date(anho, mes, dia)
-                            monto = round(float(monto), 2)
-                            gasto = Gasto(concepto=concepto, monto=monto, fecha=fecha, viajero_id=viajero_id, actividad_id=actividad_id)
-                            session.add(gasto)
-                            session.commit()
-                            return [True, 'Se añadió con éxito el gasto.']
-                        else:
-                            return [False, 'El concepto está siendo utilizado por un gasto de esta actividad.']
+                        fecha = date(anho, mes, dia)
+                        monto = round(float(monto), 2)
+                        gasto = Gasto(concepto=concepto, monto=monto, fecha=fecha, viajero_id=viajero_id,
+                                      actividad_id=actividad_id)
+                        session.add(gasto)
+                        session.commit()
+                        return [True, 'Se añadió con éxito el gasto.']
                     else:
-                        return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+                        return [False,
+                                'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
                 else:
-                    return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+                    return [False,
+                            'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
 
     def editarGasto(self, gasto_id, viajero_id, concepto, anho, mes, dia, monto):
         if gasto_id is None or viajero_id is None:
