@@ -120,7 +120,7 @@ class Vista_lista_viajeros(QWidget):
             etiqueta_eliminar.setToolTip("Delete")
             etiqueta_eliminar.setFixedSize(30, 30)
             etiqueta_eliminar.setIcon(QIcon("src/recursos/005-delete.png"))
-            etiqueta_eliminar.clicked.connect(partial(self.eliminar_viajero, viajero.id))
+            etiqueta_eliminar.clicked.connect(partial(self.eliminar_viajero, viajero))
             self.distribuidor_tabla_viajeros.addWidget(etiqueta_eliminar, numero_fila + 1, 2, Qt.AlignTop)
 
             boton_editar = QPushButton("", self)
@@ -144,11 +144,20 @@ class Vista_lista_viajeros(QWidget):
         if dialogo.resultado == 1:
             self.interfaz.editar_viajero(viajero, dialogo.texto_nombre.text(), dialogo.texto_apellido.text())
 
-    def eliminar_viajero(self, indice_viajero):
+    def eliminar_viajero(self, viajero):
         """
         Esta función informa a la interfaz del viajero a eliminar
         """
-        self.interfaz.eliminar_viajero(indice_viajero)
+        mensaje_confirmacion = QMessageBox()
+        mensaje_confirmacion.setIcon(QMessageBox.Question)
+        mensaje_confirmacion.setText(
+            "¿Esta seguro de que desea borrar al viajero?\nRecuerde que esta acción es irreversible")
+        mensaje_confirmacion.setWindowTitle("¿Desea eliminar a "+viajero.nombre_completo()+"?")
+        mensaje_confirmacion.setWindowIcon(QIcon("src/recursos/smallLogo.png"))
+        mensaje_confirmacion.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
+        respuesta = mensaje_confirmacion.exec_()
+        if respuesta == QMessageBox.Yes:
+            self.interfaz.eliminar_viajero(viajero)
 
     def mostrar_dialogo_insertar_viajero(self):
         """

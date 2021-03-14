@@ -250,12 +250,12 @@ class ControlCuenta():
 
     def eliminarViajero(self, viajero_id):
         if viajero_id is None:
-            return False
+            return [False, "Viajero no definido."]
         else:
             viajero = session.query(Viajero).filter_by(id=viajero_id).first()
 
             if viajero is None:
-                return False
+                return [False, "Viajero no encontrado."]
             else:
                 gastos = session.query(Gasto).filter(Gasto.viajero_id == viajero.id).all()
                 actividad_viajeros = session.query(ActividadViajero).filter(
@@ -264,8 +264,9 @@ class ControlCuenta():
                 if len(gastos) == 0 and len(actividad_viajeros) == 0:
                     session.delete(viajero)
                     session.commit()
+                    return [True, "Se eliminó el viajero."]
                 else:
-                    return False
+                    return [False, "El viajero pertenece a un(as) actividad(es) y/o tiene gasto(s)."]
 
     def crearActividad(self, nombre):
         if not nombre:

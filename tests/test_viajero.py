@@ -143,10 +143,10 @@ class ViajeroTestCase(unittest.TestCase):
         eliminar_viajero_en_actividad_sin_gastos = self.control_cuenta.eliminarViajero(self.viajero1_id)
         eliminar_viajero_en_actividad_con_gastos = self.control_cuenta.eliminarViajero(self.viajero2_id)
 
-        self.assertEqual(False, eliminar_viajero_con_id_nulo)
-        self.assertEqual(False, eliminar_viajero_inexistente)
-        self.assertEqual(False, eliminar_viajero_en_actividad_sin_gastos)
-        self.assertEqual(False, eliminar_viajero_en_actividad_con_gastos)
+        self.assertEqual(False, eliminar_viajero_con_id_nulo[0])
+        self.assertEqual(False, eliminar_viajero_inexistente[0])
+        self.assertEqual(False, eliminar_viajero_en_actividad_sin_gastos[0])
+        self.assertEqual(False, eliminar_viajero_en_actividad_con_gastos[0])
 
         viajero_previa_eliminacion = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).count()
         self.control_cuenta.eliminarViajero(self.viajero3_id)

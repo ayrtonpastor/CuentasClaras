@@ -138,12 +138,21 @@ class App_CuentasClaras(QApplication):
 
         self.vista_lista_viajeros.mostrar_viajeros(self.dar_viajeros())
 
-    def eliminar_viajero(self, indice_viajero):
+    def eliminar_viajero(self, viajero):
         """
         Esta función elimina un viajero en la lógica (debe modificarse cuando se construya la lógica)
         """
-        self.logica.viajeros.pop(indice_viajero)
-        self.vista_lista_viajeros.mostrar_viajeros(self.logica.viajeros)
+        eliminar_viajero = self.logica.eliminarViajero(viajero.id)
+
+        if eliminar_viajero[0] is not True:
+            mensaje_error = QMessageBox()
+            mensaje_error.setIcon(QMessageBox.Critical)
+            mensaje_error.setWindowTitle("Error al eliminar viajero")
+            mensaje_error.setText(eliminar_viajero[1])
+            mensaje_error.setStandardButtons(QMessageBox.Ok)
+            mensaje_error.exec_()
+
+        self.vista_lista_viajeros.mostrar_viajeros(self.dar_viajeros())
 
     def mostrar_actividad(self, actividad=None):
         """
