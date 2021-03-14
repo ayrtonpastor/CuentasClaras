@@ -17,9 +17,9 @@ class ActividadTestCase(unittest.TestCase):
         """ Generación de datos aleatorios """
         self.data_factory = Faker()
 
-        nombre_actividad1 = self.data_factory.name()
-        nombre_actividad2 = self.data_factory.name()
-        nombre_actividad3 = self.data_factory.name()
+        nombre_actividad1 = self.data_factory.word()
+        nombre_actividad2 = self.data_factory.word()
+        nombre_actividad3 = self.data_factory.word()
 
         self.actividad1 = Actividad(nombre=nombre_actividad1, terminada=False)
         self.actividad2 = Actividad(nombre=nombre_actividad2, terminada=False)
@@ -60,17 +60,17 @@ class ActividadTestCase(unittest.TestCase):
         self.session.add_all([self.actividad_viajero1, self.actividad_viajero2, self.actividad_viajero3,
                               self.actividad_viajero4])
 
-        concepto_gasto1 = self.data_factory.name()
-        concepto_gasto2 = self.data_factory.name()
-        concepto_gasto3 = self.data_factory.name()
+        concepto_gasto1 = self.asignar_concepto(self.data_factory)
+        concepto_gasto2 = self.asignar_concepto(self.data_factory)
+        concepto_gasto3 = self.asignar_concepto(self.data_factory)
 
-        monto_gasto1 = round(random.uniform(1000, 10000), 2)
-        monto_gasto2 = round(random.uniform(1234, 15928), 2)
-        monto_gasto3 = round(random.uniform(9923, 14765), 2)
+        monto_gasto1 = self.asignar_monto()
+        monto_gasto2 = self.asignar_monto()
+        monto_gasto3 = self.asignar_monto()
 
-        fecha_gasto1 = self.data_factory.date_between_dates(date_start=date(2019, 1, 1), date_end=date.today())
-        fecha_gasto2 = self.data_factory.date_between_dates(date_start=date(2019, 1, 1), date_end=date.today())
-        fecha_gasto3 = self.data_factory.date_between_dates(date_start=date(2019, 1, 1), date_end=date.today())
+        fecha_gasto1 = self.asignar_fecha(self.data_factory)
+        fecha_gasto2 = self.asignar_fecha(self.data_factory)
+        fecha_gasto3 = self.asignar_fecha(self.data_factory)
 
         # Gastos asociados a la actividad 1
         self.gasto1 = Gasto(concepto=concepto_gasto1, monto=monto_gasto1, fecha=fecha_gasto1,
@@ -197,3 +197,12 @@ class ActividadTestCase(unittest.TestCase):
         gasto_editado_con_exito = self.session.query(Gasto).filter(Gasto.id == self.gasto1_id).first()
         self.assertEqual([self.gasto3_concepto, "{:.2f}".format(543.00)],
                          [gasto_editado_con_exito.concepto, "{:.2f}".format(gasto_editado_con_exito.monto)])
+
+    def asignar_concepto(self, data_factory):
+        return data_factory.word()
+
+    def asignar_monto(self):
+        return round(random.uniform(1000, random.randint(1000, 15000)), 2)
+
+    def asignar_fecha(self, data_factory):
+        return data_factory.date_between_dates(date_start=date(2019, 1, 1), date_end=date.today())
