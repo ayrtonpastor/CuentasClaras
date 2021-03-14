@@ -176,9 +176,21 @@ class ActividadTestCase(unittest.TestCase):
             self.gasto3_id, 123, "Concepto gasto viajero inexistente", 2020, 5, 4, 2323.78)
         editar_gasto_viajero_no_perteneciente_a_actividad = self.control_cuenta.editarGasto(
             self.gasto1_id, self.viajero4_id, "Concepto gasto con viajero fuera de actividad", 2020, 5, 4, 2323.78)
+        editar_gasto_fecha_erronea = self.control_cuenta.editarGasto(
+            self.gasto1_id, self.viajero1_id, "Concepto gasto 1 editado", -2020, 12, None, 6663.43)
+        editar_gasto_concepto_nulo = self.control_cuenta.editarGasto(
+            self.gasto1_id, self.viajero1_id, None, 2020, 6, 12, 8932.34)
+        editar_gasto_concepto_blanco = self.control_cuenta.editarGasto(
+            self.gasto1_id, self.viajero1_id, "", 2020, 6, 12, 8932.34)
+        editar_gasto_monto_positivo = self.control_cuenta.editarGasto(
+            self.gasto3_id, self.viajero4_id, "Concepto gasto 3 editado", 2020, 9, 24, -5543.12)
 
         self.assertEqual(False, editar_gasto_id_inexistente)
         self.assertEqual(False, editar_gasto_id_nulo)
         self.assertEqual(False, editar_gasto_sin_viajero)
         self.assertEqual(False, editar_gasto_viajero_inexistente)
         self.assertEqual(False, editar_gasto_viajero_no_perteneciente_a_actividad)
+        self.assertEqual(False, editar_gasto_fecha_erronea)
+        self.assertEqual(False, editar_gasto_concepto_nulo)
+        self.assertEqual(False, editar_gasto_concepto_blanco)
+        self.assertEqual(False, editar_gasto_monto_positivo)
