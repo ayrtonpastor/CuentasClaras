@@ -265,6 +265,8 @@ class ControlCuenta():
 
                     if len(actividad_viajeros) > 0:
                         return False
+                else:
+                    return False
 
     def crearActividad(self, nombre):
         if not nombre:
