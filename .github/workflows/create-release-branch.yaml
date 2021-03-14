@@ -28,6 +28,8 @@ jobs:
     steps:
     - name: Checkout de repositorio
       uses: actions/checkout@v2
+    - name: Create release branch
+      run: git checkout release/v${{ github.event.inputs.versionName }}
     - name: Configuración de entorno de python
       uses: actions/setup-python@v2
       with:
@@ -59,8 +61,8 @@ jobs:
        title: v${{ github.event.inputs.versionName }} into main
        reviewers: ${{ github.event.issue.user.login }}
        body: |
-           Hi!
-           This PR was created in response workflow running.
+           Hola!
+           Este PR fue creado ya que las pruebas en Release se ejecutaron exitosamente.
 
   pullrequest-develop:
     needs: validartests
@@ -76,5 +78,5 @@ jobs:
           title: v${{ github.event.inputs.versionName }} into develop
           reviewers: ${{ github.event.issue.user.login }}
           body: |
-              Hi!
-              This PR was created in response workflow running.
+              Hola!
+              Este PR fue creado ya que las pruebas en Release se ejecutaron exitosamente.
