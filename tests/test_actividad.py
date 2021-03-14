@@ -357,3 +357,8 @@ class ActividadTestCase(unittest.TestCase):
         count = self.session.query(Actividad).filter(
             Actividad.nombre == nombre_valido).count()
         self.assertEqual(1, count)
+
+    def test_terminar_actividad(self):
+        terminar_actividad_con_id_nulo = self.control_cuenta.terminarActividad(None)
+
+        self.assertEqual(False, terminar_actividad_con_id_nulo)

@@ -320,6 +320,9 @@ class ControlCuenta():
             session.rollback()
             raise exception
 
+    def terminarActividad(self, actividad_id):
+        pass
+
     def darListaViajerosActividad(self, actividad_id):
         return session.query(ActividadViajero).filter(ActividadViajero.actividad_id == actividad_id)
 
