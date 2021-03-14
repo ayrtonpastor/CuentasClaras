@@ -36,7 +36,7 @@ class ControlCuenta():
         if monto_gastos_por_actividad == 0:
             return matriz
 
-        promedio_gastos_viajero = monto_gastos_por_actividad/actividad_viajeros.count()
+        promedio_gastos_viajero = monto_gastos_por_actividad / actividad_viajeros.count()
 
         cantidad_para_compensar = []
         for i in range(actividad_viajeros.count()):
@@ -137,7 +137,7 @@ class ControlCuenta():
             else:
                 if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(dia,
                                                                                                                int) and isinstance(
-                        monto, (int, float)):
+                    monto, (int, float)):
                     concepto = concepto.strip()
 
                     if concepto != "" and anho > 0 and mes > 0 and dia > 0 and monto > 0:
@@ -165,7 +165,8 @@ class ControlCuenta():
             if gasto is None or viajero is None:
                 return [False, 'No se encontró el gasto o el viajero definidos.']
             else:
-                actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=gasto.actividad_id, viajero_id=viajero_id).first()
+                actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=gasto.actividad_id,
+                                                                              viajero_id=viajero_id).first()
 
                 if actividad_viajero is None:
                     return [False, 'El viajero no pertenece a la actividad.']
@@ -183,9 +184,11 @@ class ControlCuenta():
                             session.commit()
                             return [True, 'Se editó con éxito el gasto.']
                         else:
-                            return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+                            return [False,
+                                    'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
                     else:
-                        return [False, 'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+                        return [False,
+                                'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
 
     def eliminarGasto(self, gasto_id):
         if gasto_id is None:
@@ -245,6 +248,26 @@ class ControlCuenta():
             else:
                 return False
 
+    def eliminarViajero(self, viajero_id):
+        if viajero_id is None:
+            return [False, "Viajero no definido."]
+        else:
+            viajero = session.query(Viajero).filter_by(id=viajero_id).first()
+
+            if viajero is None:
+                return [False, "Viajero no encontrado."]
+            else:
+                gastos = session.query(Gasto).filter(Gasto.viajero_id == viajero.id).all()
+                actividad_viajeros = session.query(ActividadViajero).filter(
+                    ActividadViajero.viajero_id == viajero.id).all()
+
+                if len(gastos) == 0 and len(actividad_viajeros) == 0:
+                    session.delete(viajero)
+                    session.commit()
+                    return [True, "Se eliminó el viajero."]
+                else:
+                    return [False, "El viajero pertenece a un(as) actividad(es) y/o tiene gasto(s)."]
+
     def crearActividad(self, nombre):
         if not nombre:
             return None
@@ -276,7 +299,8 @@ class ControlCuenta():
             return None
         try:
 
-            if session.query(Gasto).filter(Gasto.viajero_id == viajero_id, Gasto.actividad_id == actividad_id).count() > 0:
+            if session.query(Gasto).filter(Gasto.viajero_id == viajero_id,
+                                           Gasto.actividad_id == actividad_id).count() > 0:
                 raise Exception("No se puede eliminar viajero con gastos")
 
             m_actividad = session.query(Actividad).filter(
@@ -321,18 +345,18 @@ class ControlCuenta():
         except IntegrityError as exception:
             session.rollback()
             raise exception
-    
+
     def editarActividad(self, actividad_id, nombre):
         if not actividad_id:
             return None
-        
+
         try:
             if not nombre:
                 raise ValueError("El nombre no puede ser vacio")
 
             m_actividad = session.query(Actividad).filter(
                 Actividad.id == actividad_id).first()
-            
+
             if m_actividad.terminada:
                 raise ValueError("La actividad está terminada y no se puede modificar")
 
