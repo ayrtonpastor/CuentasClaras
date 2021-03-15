@@ -18,80 +18,51 @@ class ActividadTestCase(unittest.TestCase):
         """ Generación de datos aleatorios """
         self.data_factory = Faker()
 
-        nombre_actividad1 = self.data_factory.name()
-        nombre_actividad2 = self.data_factory.name()
-        nombre_actividad3 = self.data_factory.name()
-        nombre_actividad4 = self.data_factory.name()
+        self.actividad1 = Actividad(nombre=self.data_factory.word(), terminada=False)
+        self.actividad2 = Actividad(nombre=self.data_factory.word(), terminada=False)
+        self.actividad3 = Actividad(nombre=self.data_factory.word(), terminada=False)
+        self.actividad4 = Actividad(nombre=self.data_factory.word(), terminada=False)
 
-        self.actividad1 = Actividad(nombre=nombre_actividad1, terminada=False)
-        self.actividad2 = Actividad(nombre=nombre_actividad2, terminada=False)
-        self.actividad3 = Actividad(nombre=nombre_actividad3, terminada=False)
-        self.actividad4 = Actividad(nombre=nombre_actividad4, terminada=False)
+        self.session.add_all([self.actividad1, self.actividad2, self.actividad3, self.actividad4])
 
-        self.session.add_all(
-            [self.actividad1, self.actividad2, self.actividad3, self.actividad4])
+        self.viajero1 = Viajero(nombre=self.data_factory.name(), apellido=self.data_factory.name())
+        self.viajero2 = Viajero(nombre=self.data_factory.name(), apellido=self.data_factory.name())
+        self.viajero3 = Viajero(nombre=self.data_factory.name(), apellido=self.data_factory.name())
+        self.viajero4 = Viajero(nombre=self.data_factory.name(), apellido=self.data_factory.name())
 
-        nombre_viajero1 = self.data_factory.name()
-        nombre_viajero2 = self.data_factory.name()
-        nombre_viajero3 = self.data_factory.name()
-        nombre_viajero4 = self.data_factory.name()
+        self.session.add_all([self.viajero1, self.viajero2, self.viajero3, self.viajero4])
 
-        apellido_viajero1 = self.data_factory.name()
-        apellido_viajero2 = self.data_factory.name()
-        apellido_viajero3 = self.data_factory.name()
-        apellido_viajero4 = self.data_factory.name()
-
-        self.viajero1 = Viajero(nombre=nombre_viajero1,
-                                apellido=apellido_viajero1)
-        self.viajero2 = Viajero(nombre=nombre_viajero2,
-                                apellido=apellido_viajero2)
-        self.viajero3 = Viajero(nombre=nombre_viajero3,
-                                apellido=apellido_viajero3)
-        self.viajero4 = Viajero(nombre=nombre_viajero4,
-                                apellido=apellido_viajero4)
-
-        self.session.add_all(
-            [self.viajero1, self.viajero2, self.viajero3, self.viajero4])
         self.session.flush()
 
         # Viajeros asociados a actividad 1
-        self.actividad_viajero1 = ActividadViajero(
-            actividad_id=self.actividad1.id, viajero_id=self.viajero1.id)
-        self.actividad_viajero2 = ActividadViajero(
-            actividad_id=self.actividad1.id, viajero_id=self.viajero2.id)
+        self.actividad_viajero1 = ActividadViajero(actividad_id=self.actividad1.id, viajero_id=self.viajero1.id)
+        self.actividad_viajero2 = ActividadViajero(actividad_id=self.actividad1.id, viajero_id=self.viajero2.id)
 
         # Viajeros asociados a actividad 2
-        self.actividad_viajero3 = ActividadViajero(
-            actividad_id=self.actividad2.id, viajero_id=self.viajero3.id)
-        self.actividad_viajero4 = ActividadViajero(
-            actividad_id=self.actividad2.id, viajero_id=self.viajero4.id)
+        self.actividad_viajero3 = ActividadViajero(actividad_id=self.actividad2.id, viajero_id=self.viajero3.id)
+        self.actividad_viajero4 = ActividadViajero(actividad_id=self.actividad2.id, viajero_id=self.viajero4.id)
 
         # Viajero asociado a actividad 3
-        self.actividad_viajero5 = ActividadViajero(
-            actividad_id=self.actividad3.id, viajero_id=self.viajero4.id)
-        self.actividad_viajero6 = ActividadViajero(
-            actividad_id=self.actividad3.id, viajero_id=self.viajero1.id)
+        self.actividad_viajero5 = ActividadViajero(actividad_id=self.actividad3.id, viajero_id=self.viajero4.id)
+        self.actividad_viajero6 = ActividadViajero(actividad_id=self.actividad3.id, viajero_id=self.viajero1.id)
 
         self.session.add_all([self.actividad_viajero1, self.actividad_viajero2, self.actividad_viajero3,
                               self.actividad_viajero4, self.actividad_viajero5, self.actividad_viajero6])
 
         # Gastos asociados a la actividad 1
-        concepto_gasto1 = self.data_factory.name()
-        concepto_gasto2 = self.data_factory.name()
-        concepto_gasto3 = self.data_factory.name()
-
-        self.gasto1 = Gasto(concepto=concepto_gasto1, monto=1234, fecha=date(2021, 1, 1),
+        self.gasto1 = Gasto(concepto=self.data_factory.word(), monto=1234, fecha=self.asignar_fecha(),
                             viajero_id=self.viajero1.id, actividad_id=self.actividad1.id)
-        self.gasto2 = Gasto(concepto=concepto_gasto2, monto=4444, fecha=date(2021, 1, 4),
+        self.gasto2 = Gasto(concepto=self.data_factory.word(), monto=4444, fecha=self.asignar_fecha(),
                             viajero_id=self.viajero2.id, actividad_id=self.actividad1.id)
 
         # Gastos asociados a la actividad 2
-        self.gasto3 = Gasto(concepto=concepto_gasto3, monto=999.24, fecha=date(
-            2020, 1, 1), viajero_id=self.viajero3.id, actividad_id=self.actividad2.id)
+        self.gasto3 = Gasto(concepto=self.data_factory.word(), monto=999.24, fecha=self.asignar_fecha(),
+                            viajero_id=self.viajero3.id, actividad_id=self.actividad2.id)
 
         self.session.add_all([self.gasto1, self.gasto2, self.gasto3])
 
         self.session.commit()
+
         self.actividad1_id = self.actividad1.id
         self.actividad2_id = self.actividad2.id
         self.actividad3_id = self.actividad3.id
@@ -368,3 +339,6 @@ class ActividadTestCase(unittest.TestCase):
         self.control_cuenta.terminarActividad(self.actividad1_id)
         actividad = self.session.query(Actividad).filter(Actividad.id == self.actividad1_id).first()
         self.assertEqual(True, actividad.terminada)
+
+    def asignar_fecha(self):
+        return self.data_factory.date_between_dates(date_start=date(2019, 1, 1), date_end=date.today())
