@@ -58,4 +58,4 @@ jobs:
       uses: KeisukeYamashita/auto-pull-request-merge@v1
       with:
         token: "${{ secrets.GITHUB_TOKEN }}"
-        pullRequestNumber: steps.open-pr.outputs.pr_number
+        pullRequestNumber: "${{ steps.open-pr.outputs.pr_number }}"
