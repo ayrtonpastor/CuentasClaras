@@ -42,13 +42,29 @@ jobs:
     name: Pull request main
     runs-on: ubuntu-latest
     steps:
-    - name: Create pull request into main
-      uses: thomaseizinger/create-pull-request@1.0.0
+    - name: pull-request
+      uses: repo-sync/pull-request@v2
       with:
-       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       head: release/v${{ github.event.inputs.versionName }}
-       base: main
-       title: v${{ github.event.inputs.versionName }} into main
-       body: |
-           Hola!
-           Este PR fue creado ya que las pruebas en Release se ejecutaron exitosamente.
+        source_branch: release/v${{ github.event.inputs.versionName }}
+        destination_branch: "main"
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        pr_label: "auto-merge-main"
+        pr_title: "v${{ github.event.inputs.versionName }} into main"
+        pr_body: "Este PR fue creado ya que las pruebas en Release se ejecutaron exitosamente."
+    - name: output-url
+      run: echo ${{steps.open-pr.outputs.pr_url}}
+    - name: output-number
+      run: echo ${{steps.open-pr.outputs.pr_number}}
+    - name: output-has-changed-files
+      run: echo ${{steps.open-pr.outputs.has_changed_files}}
+
+  automerge:
+    name: Automerge
+    needs: pullrequest-main
+    runs-on: ubuntu-latest
+    steps:
+      - name: automerge
+        uses: "pascalgn/automerge-action@4536e8847eb62fe2f0ee52c8fa92d17aa97f932f"
+        env:
+          GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          MERGE_LABELS: "auto-merge-main"
