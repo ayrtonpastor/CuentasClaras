@@ -38,6 +38,7 @@ jobs:
           coverage report -m
 
     - name: pull-request
+      id: open-pr
       uses: repo-sync/pull-request@v2
       with:
         source_branch: release/v${{ github.event.inputs.versionName }}
@@ -53,8 +54,8 @@ jobs:
     - name: output-has-changed-files
       run: echo ${{steps.open-pr.outputs.has_changed_files}}
       
-    - name: automerge
-      uses: "pascalgn/automerge-action@4536e8847eb62fe2f0ee52c8fa92d17aa97f932f"
-      env:
-        GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        MERGE_LABELS: "auto-merge-main"
+    - name: auto-pull-request-merge
+      uses: KeisukeYamashita/auto-pull-request-merge@v1
+      with:
+        token: "${{ secrets.GITHUB_TOKEN }}"
+        pullRequestNumber: steps.open-pr.outputs.pr_number
