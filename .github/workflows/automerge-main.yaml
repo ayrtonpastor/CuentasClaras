@@ -9,7 +9,9 @@ jobs:
   automerge:
     runs-on: ubuntu-latest
     steps:
-      - uses: reitermarkus/automerge@v1
+      - name: Merge me!
+        uses: ridedott/merge-me-action@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          pull-request: ${{ github.event.inputs.pull-request }}
+          GITHUB_LOGIN: my-awesome-bot-r2d2
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MERGE_METHOD : MERGE
