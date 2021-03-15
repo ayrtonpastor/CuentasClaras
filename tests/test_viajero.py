@@ -23,13 +23,9 @@ class ViajeroTestCase(unittest.TestCase):
 
         self.session.add_all([self.actividad1])
 
-        nombre_viajero1 = self.data_factory.name()
-        nombre_viajero2 = self.data_factory.name()
-        nombre_viajero3 = self.data_factory.name()
-
-        apellido_viajero1 = self.data_factory.name()
-        apellido_viajero2 = self.data_factory.name()
-        apellido_viajero3 = self.data_factory.name()
+        nombre_viajero1, apellido_viajero1 = self.asignar_nombre_y_apellido()
+        nombre_viajero2, apellido_viajero2 = self.asignar_nombre_y_apellido()
+        nombre_viajero3, apellido_viajero3 = self.asignar_nombre_y_apellido()
 
         self.viajero1 = Viajero(nombre=nombre_viajero1, apellido=apellido_viajero1)
         self.viajero2 = Viajero(nombre=nombre_viajero2, apellido=apellido_viajero2)
@@ -90,67 +86,77 @@ class ViajeroTestCase(unittest.TestCase):
         self.session.close()
 
     def test_listar_viajeros(self):
+        # Listado de viajeros
         viajeros = self.control_cuenta.listarViajeros()
         self.assertEqual(len(viajeros), 3)
 
     def test_crear_viajero(self):
-        nombre_viajero1 = None
-        apellido_viajero1 = ""
-        nombre_viajero2 = ""
-        apellido_viajero2 = None
-        nombre_viajero3 = self.data_factory.name()
-        apellido_viajero3 = self.data_factory.name()
-        nombre_viajero4 = nombre_viajero3
-        apellido_viajero4 = apellido_viajero3
-
-        crear_viajero1 = self.control_cuenta.crearViajero(nombre_viajero1, apellido_viajero1)
-        crear_viajero2 = self.control_cuenta.crearViajero(nombre_viajero2, apellido_viajero2)
-        self.control_cuenta.crearViajero(nombre_viajero3, apellido_viajero3)
-        crear_viajero4 = self.control_cuenta.crearViajero(nombre_viajero4, apellido_viajero4)
-
-        viajero3 = self.session.query(Viajero).filter(Viajero.nombre == nombre_viajero3, Viajero.apellido == apellido_viajero3).first()
-
+        # Crear viajero con nombre y apellidos vacíos o en blanco
+        crear_viajero1 = self.control_cuenta.crearViajero(None, "")
+        crear_viajero2 = self.control_cuenta.crearViajero("", None)
         self.assertEqual(False, crear_viajero1)
         self.assertEqual(False, crear_viajero2)
-        self.assertTrue(nombre_viajero3, viajero3.nombre)
-        self.assertEqual(False, crear_viajero4)
+
+        # Crear viajero con nombre y apellido igual a otro viajero
+        crear_viajero3 = self.control_cuenta.crearViajero(self.viajero3_nombre_original, self.viajero3_apellido_original)
+        self.assertEqual(False, crear_viajero3)
+
+        # Crear viajero sin errores
+        nombre_viajero4, apellido_viajero4 = self.asignar_nombre_y_apellido()
+        self.control_cuenta.crearViajero(nombre_viajero4, apellido_viajero4)
+        viajero3 = self.session.query(Viajero).filter(Viajero.nombre == nombre_viajero4, Viajero.apellido == apellido_viajero4).first()
+        self.assertTrue(nombre_viajero4, viajero3.nombre)
 
     def test_editar_viajero(self):
-        nuevo_nombre1 = ""
-        nuevo_apellido1 = None
-        nuevo_nombre2 = self.viajero3_nombre_original
-        nuevo_apellido2 = self.viajero3_apellido_original
-        nuevo_nombre3 = self.data_factory.name()
-        nuevo_apellido3 = self.data_factory.name()
-
-        self.control_cuenta.editarViajero(self.viajero1_id, nuevo_nombre1, nuevo_apellido1)
-        self.control_cuenta.editarViajero(self.viajero2_id, nuevo_nombre2, nuevo_apellido2)
-        self.control_cuenta.editarViajero(self.viajero3_id, nuevo_nombre3, nuevo_apellido3)
-        editar_viajero_inexistente = self.control_cuenta.editarViajero(200, nuevo_nombre2, nuevo_apellido2)
-
+        # Editar viajero con nombre en blanco o apellido nulo
+        self.control_cuenta.editarViajero(self.viajero1_id, "", None)
         viajero1 = self.session.query(Viajero).filter(Viajero.id == self.viajero1_id).first()
-        viajero2 = self.session.query(Viajero).filter(Viajero.id == self.viajero2_id).first()
-        viajero3 = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).first()
-
         self.assertEqual(self.viajero1_nombre_original, viajero1.nombre)
-        self.assertEqual(self.viajero2_nombre_original, viajero2.nombre)
-        self.assertEqual([nuevo_nombre3, nuevo_apellido3], [viajero3.nombre, viajero3.apellido])
+
+        # Editar viajero con id inexistente
+        nuevo_nombre1, nuevo_apellido1 = self.asignar_nombre_y_apellido()
+        editar_viajero_inexistente = self.control_cuenta.editarViajero(200, nuevo_nombre1, nuevo_apellido1)
         self.assertEqual(False, editar_viajero_inexistente)
 
-    def test_eliminar_viajero(self):
-        eliminar_viajero_con_id_nulo = self.control_cuenta.eliminarViajero(None)
-        eliminar_viajero_inexistente = self.control_cuenta.eliminarViajero(231)
-        eliminar_viajero_en_actividad_sin_gastos = self.control_cuenta.eliminarViajero(self.viajero1_id)
-        eliminar_viajero_en_actividad_con_gastos = self.control_cuenta.eliminarViajero(self.viajero2_id)
+        # Editar viajero con nombre y apellido igual a otro viajero
+        self.control_cuenta.editarViajero(self.viajero2_id, self.viajero3_nombre_original, self.viajero3_apellido_original)
+        viajero2 = self.session.query(Viajero).filter(Viajero.id == self.viajero2_id).first()
+        self.assertEqual(self.viajero2_nombre_original, viajero2.nombre)
 
+        # Editar viajero con éxito
+        nuevo_nombre3, nuevo_apellido3 = self.asignar_nombre_y_apellido()
+        self.control_cuenta.editarViajero(self.viajero3_id, nuevo_nombre3, nuevo_apellido3)
+        viajero3 = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).first()
+        self.assertEqual([nuevo_nombre3, nuevo_apellido3], [viajero3.nombre, viajero3.apellido])
+
+    def test_eliminar_viajero(self):
+        # Eliminar viajero con id nulo
+        eliminar_viajero_con_id_nulo = self.control_cuenta.eliminarViajero(None)
         self.assertEqual(False, eliminar_viajero_con_id_nulo[0])
+
+        # Eliminar viajero con id inexistente
+        eliminar_viajero_inexistente = self.control_cuenta.eliminarViajero(231)
         self.assertEqual(False, eliminar_viajero_inexistente[0])
-        self.assertEqual(False, eliminar_viajero_en_actividad_sin_gastos[0])
+
+        # Eliminar viajero con gastos
+        eliminar_viajero_en_actividad_con_gastos = self.control_cuenta.eliminarViajero(self.viajero2_id)
         self.assertEqual(False, eliminar_viajero_en_actividad_con_gastos[0])
 
-        viajero_previa_eliminacion = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).count()
-        self.control_cuenta.eliminarViajero(self.viajero3_id)
-        viajero_posterior_eliminacion = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).count()
+        # Eliminar viajero sin gastos pero perteneciente a actividades
+        eliminar_viajero_en_actividad_sin_gastos = self.control_cuenta.eliminarViajero(self.viajero1_id)
+        self.assertEqual(False, eliminar_viajero_en_actividad_sin_gastos[0])
 
+        # Eliminar viajero sin gastos y sin pertenecer a ninguna actividad (con éxito)
+        # validación de existencia de viajero previa eliminación
+        viajero_previa_eliminacion = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).count()
         self.assertEqual(1, viajero_previa_eliminacion)
+
+        self.control_cuenta.eliminarViajero(self.viajero3_id)
+
+        # validación existencia de viajero después de eliminar
+        viajero_posterior_eliminacion = self.session.query(Viajero).filter(Viajero.id == self.viajero3_id).count()
         self.assertEqual(0, viajero_posterior_eliminacion)
+
+    def asignar_nombre_y_apellido(self):
+        # método que retorna un nombre y apellido aleatorio para el viajero
+        return [self.data_factory.name(), self.data_factory.name()]
