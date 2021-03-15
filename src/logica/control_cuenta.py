@@ -1,3 +1,4 @@
+from datetime import date
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
 
@@ -35,7 +36,7 @@ class ControlCuenta():
         if monto_gastos_por_actividad == 0:
             return matriz
 
-        promedio_gastos_viajero = monto_gastos_por_actividad/actividad_viajeros.count()
+        promedio_gastos_viajero = monto_gastos_por_actividad / actividad_viajeros.count()
 
         cantidad_para_compensar = []
         for i in range(actividad_viajeros.count()):
@@ -122,6 +123,91 @@ class ControlCuenta():
         actividad = session.query(Actividad).filter_by(id=actividad_id).first()
         return actividad.gastos
 
+    def crearGastoParaActividad(self, actividad_id, viajero_id, concepto, anho, mes, dia, monto):
+        if actividad_id is None or viajero_id is None:
+            return [False, 'El viajero no están definido.']
+        else:
+            actividad = session.query(Actividad).filter_by(id=actividad_id).first()
+            viajero = session.query(Viajero).filter_by(id=viajero_id).first()
+            actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=actividad_id,
+                                                                          viajero_id=viajero_id).first()
+
+            if actividad is None or viajero is None or actividad_viajero is None:
+                return [False, 'No se encontró el viajero.']
+            else:
+                if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(dia,
+                                                                                                               int) and isinstance(
+                    monto, (int, float)):
+                    concepto = concepto.strip()
+
+                    if concepto != "" and anho > 0 and mes > 0 and dia > 0 and monto > 0:
+                        fecha = date(anho, mes, dia)
+                        monto = round(float(monto), 2)
+                        gasto = Gasto(concepto=concepto, monto=monto, fecha=fecha, viajero_id=viajero_id,
+                                      actividad_id=actividad_id)
+                        session.add(gasto)
+                        session.commit()
+                        return [True, 'Se añadió con éxito el gasto.']
+                    else:
+                        return [False,
+                                'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+                else:
+                    return [False,
+                            'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+
+    def editarGasto(self, gasto_id, viajero_id, concepto, anho, mes, dia, monto):
+        if gasto_id is None or viajero_id is None:
+            return [False, 'El viajero no están definido.']
+        else:
+            gasto = session.query(Gasto).filter_by(id=gasto_id).first()
+            viajero = session.query(Viajero).filter_by(id=viajero_id).first()
+
+            if gasto is None or viajero is None:
+                return [False, 'No se encontró el gasto o el viajero definidos.']
+            else:
+                actividad_viajero = session.query(ActividadViajero).filter_by(actividad_id=gasto.actividad_id,
+                                                                              viajero_id=viajero_id).first()
+
+                if actividad_viajero is None:
+                    return [False, 'El viajero no pertenece a la actividad.']
+                else:
+                    if isinstance(concepto, str) and isinstance(anho, int) and isinstance(mes, int) and isinstance(
+                            dia, int) and isinstance(monto, (int, float)):
+                        concepto = concepto.strip()
+                        if concepto != "" and anho > 0 and mes > 0 and dia > 0 and monto > 0:
+                            fecha = date(anho, mes, dia)
+                            monto = round(float(monto), 2)
+                            gasto.concepto = concepto
+                            gasto.monto = monto
+                            gasto.fecha = fecha
+                            gasto.viajero_id = viajero_id
+                            session.commit()
+                            return [True, 'Se editó con éxito el gasto.']
+                        else:
+                            return [False,
+                                    'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+                    else:
+                        return [False,
+                                'El concepto no debe estar en blanco, la fecha debe ser coherente y el valor debe ser positivo.']
+
+    def eliminarGasto(self, gasto_id):
+        if gasto_id is None:
+            return [False, 'Gasto no definido.']
+        else:
+            gasto = session.query(Gasto).filter_by(id=gasto_id).first()
+
+            if gasto is None:
+                return [False, 'El gasto no existe.']
+            else:
+                actividad_terminada = gasto.actividad.terminada
+
+                if actividad_terminada:
+                    return [False, 'No puede borrar el gasto debido a que la actividad ya está terminada.']
+                else:
+                    session.delete(gasto)
+                    session.commit()
+                    return [True, 'El gasto fue eliminado.']
+
     def listarViajeros(self):
         return session.query(Viajero).all()
 
@@ -162,6 +248,26 @@ class ControlCuenta():
             else:
                 return False
 
+    def eliminarViajero(self, viajero_id):
+        if viajero_id is None:
+            return [False, "Viajero no definido."]
+        else:
+            viajero = session.query(Viajero).filter_by(id=viajero_id).first()
+
+            if viajero is None:
+                return [False, "Viajero no encontrado."]
+            else:
+                gastos = session.query(Gasto).filter(Gasto.viajero_id == viajero.id).all()
+                actividad_viajeros = session.query(ActividadViajero).filter(
+                    ActividadViajero.viajero_id == viajero.id).all()
+
+                if len(gastos) == 0 and len(actividad_viajeros) == 0:
+                    session.delete(viajero)
+                    session.commit()
+                    return [True, "Se eliminó el viajero."]
+                else:
+                    return [False, "El viajero pertenece a un(as) actividad(es) y/o tiene gasto(s)."]
+
     def crearActividad(self, nombre):
         if not nombre:
             return None
@@ -193,7 +299,8 @@ class ControlCuenta():
             return None
         try:
 
-            if session.query(Gasto).filter(Gasto.viajero_id == viajero_id, Gasto.actividad_id == actividad_id).count() > 0:
+            if session.query(Gasto).filter(Gasto.viajero_id == viajero_id,
+                                           Gasto.actividad_id == actividad_id).count() > 0:
                 raise Exception("No se puede eliminar viajero con gastos")
 
             m_actividad = session.query(Actividad).filter(
@@ -213,5 +320,63 @@ class ControlCuenta():
             session.rollback()
             raise exception
 
+    def terminarActividad(self, actividad_id):
+        if actividad_id is None:
+            return [False, "Actividad no definida"]
+        else:
+            actividad = session.query(Actividad).filter(Actividad.id == actividad_id).first()
+
+            if actividad is None:
+                return [False, "La actividad no existe"]
+            else:
+                actividad.terminada = True
+                session.add(actividad)
+                session.commit()
+                return [True, "La actividad fue terminada."]
+
     def darListaViajerosActividad(self, actividad_id):
         return session.query(ActividadViajero).filter(ActividadViajero.actividad_id == actividad_id)
+
+    def eliminarActividad(self, actividad_id):
+        if not actividad_id:
+            return None
+
+        try:
+            m_actividad = session.query(Actividad).filter(
+                Actividad.id == actividad_id).first()
+
+            if len(m_actividad.gastos) > 0:
+                raise Exception(
+                    "No se puede eliminar una actividad que contiene gastos")
+
+            if m_actividad.terminada:
+                raise Exception(
+                    "No se puede eliminar una actividad que está terminada")
+
+            session.delete(m_actividad)
+            session.commit()
+
+        except IntegrityError as exception:
+            session.rollback()
+            raise exception
+
+    def editarActividad(self, actividad_id, nombre):
+        if not actividad_id:
+            return None
+
+        try:
+            if not nombre:
+                raise ValueError("El nombre no puede ser vacio")
+
+            m_actividad = session.query(Actividad).filter(
+                Actividad.id == actividad_id).first()
+
+            if m_actividad.terminada:
+                raise ValueError("La actividad está terminada y no se puede modificar")
+
+            m_actividad.nombre = nombre
+            session.add(m_actividad)
+            session.commit()
+        except IntegrityError as exception:
+            session.rollback()
+            raise exception
