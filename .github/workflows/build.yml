@@ -28,7 +28,9 @@ jobs:
         id: pruebas
         run: |
           python -m coverage run -m unittest discover tests 
-          python -m coverage xml -i 
+          python -m coverage xml -i
+      - name: Override Coverage Source Path for Sonar
+        run: sed -i "s/<source>\/home\/runner\/work\/CuentasClaras<\/source>/<source>\/github\/ayrtonpastor<\/source>/g" /home/runner/work/CuentasClaras/.coverage-reports/coverage.xml
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
