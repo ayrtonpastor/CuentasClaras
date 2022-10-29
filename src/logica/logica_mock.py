@@ -1,7 +1,7 @@
 '''
 Esta clase es tan sólo un mock con datos para probar la interfaz
 '''
-class Logica_mock():
+class logica_mock():
 
     def __init__(self):
         #Este constructor contiene los datos falsos para probar la interfaz
